@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DeleteJobRequest;
 use App\Http\Requests\StoreJobRequest;
 use App\Http\Resources\JobResource;
 use App\Models\Job;
@@ -14,6 +15,8 @@ class JobController extends Controller
     /**
      * Public job search/listing with basic filters.
      * GET /api/jobs?keyword=&location=&employment_type=&work_mode=&min_salary=&skills[]=
+    *
+    * @unauthenticated
      */
     public function index(Request $request)
     {
@@ -49,11 +52,17 @@ class JobController extends Controller
             }
         }
 
-        $jobs = $query->latest()->paginate($request->integer('per_page', 15));
+        $perPage = min(max($request->integer('per_page', 15), 1), 50);
+        $jobs = $query->latest()->paginate($perPage);
 
         return JobResource::collection($jobs);
     }
 
+    /**
+     * Show a public job listing.
+     *
+     * @unauthenticated
+     */
     public function show(Job $job)
     {
         $job->increment('views_count');
@@ -86,17 +95,13 @@ class JobController extends Controller
 
     public function update(StoreJobRequest $request, Job $job)
     {
-        $this->authorizeOwnership($request, $job);
-
         $job->update($request->validated());
 
         return new JobResource($job->load('companyProfile'));
     }
 
-    public function destroy(Request $request, Job $job)
+    public function destroy(DeleteJobRequest $request, Job $job)
     {
-        $this->authorizeOwnership($request, $job);
-
         $job->delete();
 
         return response()->json(['message' => 'Job deleted.']);
@@ -108,6 +113,7 @@ class JobController extends Controller
     public function myJobs(Request $request)
     {
         $jobs = Job::where('posted_by', $request->user()->id)
+            ->with('companyProfile')
             ->withCount('applications')
             ->latest()
             ->paginate(15);
@@ -115,12 +121,4 @@ class JobController extends Controller
         return JobResource::collection($jobs);
     }
 
-    private function authorizeOwnership(Request $request, Job $job): void
-    {
-        abort_unless(
-            $job->posted_by === $request->user()->id || $request->user()->isAdmin(),
-            403,
-            'You do not own this job posting.'
-        );
-    }
 }

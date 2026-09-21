@@ -2,18 +2,17 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApplicationResource extends JsonResource
 {
-    public function toArray(Request $request): array
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,
             'status' => $this->status,
             'cover_letter' => $this->cover_letter,
-            'resume_path' => $this->resume_path,
+            'has_resume' => filled($this->resume_path),
             'employer_notes' => $this->when(
                 $request->user()?->isEmployer() || $request->user()?->isAdmin(),
                 $this->employer_notes

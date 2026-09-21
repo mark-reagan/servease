@@ -32,6 +32,10 @@ class JobResource extends JsonResource
                 'location' => $this->companyProfile?->location,
             ],
             'applications_count' => $this->whenCounted('applications'),
+            'is_saved' => $this->when(
+                $request->user()?->isCandidate(),
+                fn () => $this->savedBy()->where('candidate_id', $request->user()->id)->exists()
+            ),
             'created_at' => $this->created_at,
         ];
     }

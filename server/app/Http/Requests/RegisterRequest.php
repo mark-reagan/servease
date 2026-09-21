@@ -21,7 +21,7 @@ class RegisterRequest extends FormRequest
             'role' => ['required', 'in:candidate,employer'],
             'phone' => ['nullable', 'string', 'max:30'],
             // required only when registering as an employer
-            'company_name' => ['required_if:role,employer', 'string', 'max:255'],
+            'company_name' => ['nullable', 'required_if:role,employer', 'string', 'max:255'],
         ];
     }
 }

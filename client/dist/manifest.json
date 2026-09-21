@@ -1,0 +1,23 @@
+{
+	"name": "ServEase Job Board",
+	"short_name": "ServEase",
+	"description": "A considered place to find and share meaningful work.",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#f4efe6",
+	"theme_color": "#1f2a24",
+	"icons": [
+		{
+			"src": "/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/apple-touch-icon.svg",
+			"sizes": "180x180",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		}
+	]
+}

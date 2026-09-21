@@ -8,7 +8,11 @@ class StoreJobRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // authorization/role check happens in route middleware
+        $user = $this->user();
+        $job = $this->route('job');
+
+        return ($user?->isEmployer() || $user?->isAdmin())
+            && (! $job || $user->isAdmin() || $job->posted_by === $user->id);
     }
 
     public function rules(): array

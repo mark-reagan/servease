@@ -7,6 +7,15 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## API
+
+All API endpoints are versioned under `/api/v1` and return JSON errors using a
+consistent `message` field, with validation details in `errors` when applicable.
+
+After starting the application, interactive documentation is available at
+`/docs`. The generated OpenAPI specification and Postman collection are also
+available from the Scribe documentation routes.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

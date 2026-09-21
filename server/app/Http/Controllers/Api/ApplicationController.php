@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplyJobRequest;
+use App\Http\Requests\UpdateApplicationStatusRequest;
+use App\Http\Requests\ViewJobApplicationsRequest;
+use App\Http\Requests\WithdrawApplicationRequest;
 use App\Http\Resources\ApplicationResource;
 use App\Models\Application;
 use App\Models\Job;
@@ -63,14 +66,8 @@ class ApplicationController extends Controller
     /**
      * Employer views applicants for one of their job postings.
      */
-    public function forJob(Request $request, Job $job)
+    public function forJob(ViewJobApplicationsRequest $request, Job $job)
     {
-        abort_unless(
-            $job->posted_by === $request->user()->id || $request->user()->isAdmin(),
-            403,
-            'You do not own this job posting.'
-        );
-
         $applications = $job->applications()
             ->with('candidate.candidateProfile')
             ->when($request->query('status'), fn ($q, $status) => $q->where('status', $status))
@@ -83,20 +80,9 @@ class ApplicationController extends Controller
     /**
      * Employer updates an application's status (reviewed/shortlisted/rejected/hired).
      */
-    public function updateStatus(Request $request, Application $application)
+    public function updateStatus(UpdateApplicationStatusRequest $request, Application $application)
     {
-        $job = $application->job;
-
-        abort_unless(
-            $job->posted_by === $request->user()->id || $request->user()->isAdmin(),
-            403,
-            'You do not own this job posting.'
-        );
-
-        $data = $request->validate([
-            'status' => ['required', 'in:pending,reviewed,shortlisted,rejected,hired'],
-            'employer_notes' => ['nullable', 'string', 'max:2000'],
-        ]);
+        $data = $request->validated();
 
         $application->update($data);
 
@@ -106,10 +92,8 @@ class ApplicationController extends Controller
     /**
      * Candidate withdraws their own application.
      */
-    public function withdraw(Request $request, Application $application)
+    public function withdraw(WithdrawApplicationRequest $request, Application $application)
     {
-        abort_unless($application->candidate_id === $request->user()->id, 403);
-
         $application->delete();
 
         return response()->json(['message' => 'Application withdrawn.']);

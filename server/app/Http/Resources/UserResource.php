@@ -15,13 +15,14 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'role' => $this->role,
             'phone' => $this->phone,
+            'is_active' => $this->is_active,
             'candidate_profile' => $this->when(
                 $this->role === 'candidate',
-                fn () => $this->candidateProfile
+                fn () => new CandidateProfileResource($this->candidateProfile)
             ),
             'company_profile' => $this->when(
                 $this->role === 'employer',
-                fn () => $this->companyProfile
+                fn () => new CompanyProfileResource($this->companyProfile)
             ),
             'created_at' => $this->created_at,
         ];

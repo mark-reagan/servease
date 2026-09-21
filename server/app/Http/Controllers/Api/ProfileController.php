@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateCandidateProfileRequest;
+use App\Http\Requests\UpdateCompanyProfileRequest;
+use App\Http\Resources\CandidateProfileResource;
+use App\Http\Resources\CompanyProfileResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -11,23 +15,10 @@ class ProfileController extends Controller
     /**
      * Candidate updates their own profile (headline, bio, skills, resume, etc).
      */
-    public function updateCandidateProfile(Request $request)
+    public function updateCandidateProfile(UpdateCandidateProfileRequest $request)
     {
         $user = $request->user();
-        abort_unless($user->isCandidate(), 403, 'Only candidates have a candidate profile.');
-
-        $data = $request->validate([
-            'headline' => ['nullable', 'string', 'max:255'],
-            'bio' => ['nullable', 'string', 'max:5000'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'skills' => ['nullable', 'array'],
-            'skills.*' => ['string', 'max:100'],
-            'linkedin_url' => ['nullable', 'url'],
-            'portfolio_url' => ['nullable', 'url'],
-            'years_experience' => ['nullable', 'integer', 'min:0', 'max:60'],
-            'open_to_work' => ['nullable', 'boolean'],
-            'resume' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
-        ]);
+        $data = $request->validated();
 
         $profile = $user->candidateProfile;
 
@@ -35,28 +26,20 @@ class ProfileController extends Controller
             $data['resume_path'] = $request->file('resume')->store('resumes/' . $user->id, 'private');
         }
 
+        unset($data['resume']);
+
         $profile->update($data);
 
-        return response()->json($profile->fresh());
+        return new CandidateProfileResource($profile->fresh());
     }
 
     /**
      * Employer updates their company profile.
      */
-    public function updateCompanyProfile(Request $request)
+    public function updateCompanyProfile(UpdateCompanyProfileRequest $request)
     {
         $user = $request->user();
-        abort_unless($user->isEmployer(), 403, 'Only employers have a company profile.');
-
-        $data = $request->validate([
-            'company_name' => ['sometimes', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:5000'],
-            'website' => ['nullable', 'url'],
-            'industry' => ['nullable', 'string', 'max:255'],
-            'company_size' => ['nullable', 'string', 'max:50'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'logo' => ['nullable', 'image', 'max:2048'],
-        ]);
+        $data = $request->validated();
 
         $profile = $user->companyProfile;
 
@@ -68,8 +51,10 @@ class ProfileController extends Controller
             $data['logo_path'] = $request->file('logo')->store('logos', 'public');
         }
 
+        unset($data['logo']);
+
         $profile->update($data);
 
-        return response()->json($profile->fresh());
+        return new CompanyProfileResource($profile->fresh());
     }
 }
