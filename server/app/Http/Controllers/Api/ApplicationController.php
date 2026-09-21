@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplyJobRequest;
+use App\Http\Requests\DownloadApplicationResumeRequest;
 use App\Http\Requests\UpdateApplicationStatusRequest;
 use App\Http\Requests\ViewJobApplicationsRequest;
 use App\Http\Requests\WithdrawApplicationRequest;
@@ -11,6 +12,7 @@ use App\Http\Resources\ApplicationResource;
 use App\Models\Application;
 use App\Models\Job;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ApplicationController extends Controller
 {
@@ -97,5 +99,17 @@ class ApplicationController extends Controller
         $application->delete();
 
         return response()->json(['message' => 'Application withdrawn.']);
+    }
+
+    /**
+     * Download the resume attached to an application (candidate, the hiring employer, or an admin).
+     */
+    public function downloadResume(DownloadApplicationResumeRequest $request, Application $application)
+    {
+        if (! $application->resume_path || ! Storage::disk('private')->exists($application->resume_path)) {
+            return response()->json(['message' => 'No resume is attached to this application.'], 404);
+        }
+
+        return Storage::disk('private')->download($application->resume_path);
     }
 }

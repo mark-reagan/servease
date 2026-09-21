@@ -18,6 +18,7 @@ export default function JobDetail() {
 	const [job, setJob] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [coverLetter, setCoverLetter] = useState('');
+	const [resumeFile, setResumeFile] = useState(null);
 	const [applying, setApplying] = useState(false);
 	const [applyMessage, setApplyMessage] = useState('');
 	const [applyError, setApplyError] = useState('');
@@ -51,12 +52,16 @@ export default function JobDetail() {
 		setApplying(true);
 		setApplyError('');
 		setApplyMessage('');
+		const data = new FormData();
+		data.append('cover_letter', coverLetter);
+		if (resumeFile) data.append('resume', resumeFile);
 		try {
-			await api.post(`/jobs/${id}/apply`, { cover_letter: coverLetter });
+			await api.post(`/jobs/${id}/apply`, data);
 			setApplyMessage(
 				'Application sent. The employer can now see it on their end.',
 			);
 			setCoverLetter('');
+			setResumeFile(null);
 		} catch (err) {
 			if (err instanceof ApiError) setApplyError(err.message);
 			else setApplyError('Could not submit your application.');
@@ -216,6 +221,28 @@ export default function JobDetail() {
 									value={coverLetter}
 									onChange={(e) => setCoverLetter(e.target.value)}
 								/>
+							</div>
+							<div>
+								<label className="field-label" htmlFor="resume">
+									Resume (PDF or Word, optional)
+								</label>
+								<input
+									id="resume"
+									type="file"
+									accept=".pdf,.doc,.docx"
+									className="field-input"
+									onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+								/>
+								{resumeFile ? (
+									<p className="text-xs text-teal mt-1">{resumeFile.name}</p>
+								) : (
+									user?.candidate_profile?.resume_path && (
+										<p className="text-xs text-ink-faint mt-1">
+											The resume on your profile will be used if you don't
+											attach one.
+										</p>
+									)
+								)}
 							</div>
 							<button type="submit" className="btn-primary" disabled={applying}>
 								{applying ? 'Sending…' : 'Submit application'}

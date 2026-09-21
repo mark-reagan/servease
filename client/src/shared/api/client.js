@@ -15,8 +15,12 @@ function getToken() {
 /**
  * Core request helper. Pass `body` as a plain object for JSON, or a
  * FormData instance for file uploads (skills[]=, resume, logo, etc).
+ * Pass `responseType: 'blob'` to fetch a binary file (e.g. resume downloads).
  */
-async function request(path, { method = 'GET', body, params } = {}) {
+async function request(
+	path,
+	{ method = 'GET', body, params, responseType } = {},
+) {
 	let url = `${BASE_URL}${path}`;
 
 	if (params) {
@@ -45,6 +49,26 @@ async function request(path, { method = 'GET', body, params } = {}) {
 		body: body ? (isFormData ? body : JSON.stringify(body)) : undefined,
 	});
 
+	if (responseType === 'blob') {
+		if (!res.ok) {
+			let data = null;
+			try {
+				data = JSON.parse(await res.text());
+			} catch {
+				data = null;
+			}
+			throw new ApiError(
+				data?.message || 'Something went wrong. Please try again.',
+				res.status,
+				data?.errors,
+			);
+		}
+
+		const disposition = res.headers.get('Content-Disposition') || '';
+		const match = disposition.match(/filename="?([^"]+)"?/);
+		return { blob: await res.blob(), filename: match?.[1] };
+	}
+
 	let data = null;
 	const text = await res.text();
 	if (text) {
@@ -64,7 +88,8 @@ async function request(path, { method = 'GET', body, params } = {}) {
 }
 
 export const api = {
-	get: (path, params) => request(path, { method: 'GET', params }),
+	get: (path, params, options) =>
+		request(path, { method: 'GET', params, ...options }),
 	post: (path, body) => request(path, { method: 'POST', body }),
 	put: (path, body) => request(path, { method: 'PUT', body }),
 	patch: (path, body) => request(path, { method: 'PATCH', body }),
