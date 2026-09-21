@@ -80,7 +80,7 @@ export default function JobDetail() {
 				setSaved(true);
 			}
 		} catch {
-			// saving is a nice-to-have; fail quietly
+			// fail quietly
 		}
 	}
 

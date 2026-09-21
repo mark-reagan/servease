@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplyJobRequest;
 use App\Http\Requests\DownloadApplicationResumeRequest;
 use App\Http\Requests\UpdateApplicationStatusRequest;
+use App\Http\Requests\ViewOwnApplicationRequest;
 use App\Http\Requests\ViewJobApplicationsRequest;
 use App\Http\Requests\WithdrawApplicationRequest;
 use App\Http\Resources\ApplicationResource;
@@ -63,6 +64,14 @@ class ApplicationController extends Controller
             ->paginate(15);
 
         return ApplicationResource::collection($applications);
+    }
+
+    /**
+     * Candidate views one of their own applications.
+     */
+    public function show(ViewOwnApplicationRequest $request, Application $application)
+    {
+        return new ApplicationResource($application->load('job.companyProfile'));
     }
 
     /**

@@ -1,0 +1,1 @@
+import{j as e,L as t}from"./index-CWCpWGi8.js";function a(){return e.jsxs("div",{className:"py-24 text-center",children:[e.jsx("p",{className:"font-display text-2xl mb-2",children:"There's nothing at this address."}),e.jsx(t,{to:"/",className:"text-amber-dark hover:underline text-sm",children:"Back to all jobs"})]})}export{a as default};

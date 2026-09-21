@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/jobs/{job}/apply', [ApplicationController::class, 'apply']);
         Route::get('/applications', [ApplicationController::class, 'myApplications']);
+        Route::get('/applications/{application}', [ApplicationController::class, 'show']);
         Route::delete('/applications/{application}', [ApplicationController::class, 'withdraw']);
 
         Route::get('/saved-jobs', [SavedJobController::class, 'index']);

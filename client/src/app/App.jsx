@@ -18,6 +18,9 @@ const ResetPassword = lazy(
 const CandidateDashboard = lazy(
 	() => import('../features/candidates/pages/CandidateDashboard'),
 );
+const ApplicationDetail = lazy(
+	() => import('../features/candidates/pages/ApplicationDetail'),
+);
 const EmployerDashboard = lazy(
 	() => import('../features/employers/pages/EmployerDashboard'),
 );
@@ -64,6 +67,7 @@ function getPageTitle(pathname) {
 	if (/^\/jobs\/[^/]+$/.test(pathname)) return 'Job Details';
 	if (/^\/jobs\/[^/]+\/edit$/.test(pathname)) return 'Edit Job';
 	if (/^\/jobs\/[^/]+\/applicants$/.test(pathname)) return 'Applicants';
+	if (/^\/applications\/[^/]+$/.test(pathname)) return 'Application Details';
 	if (pathname === '*') return 'Page Not Found';
 
 	return 'Page';
@@ -79,7 +83,7 @@ export default function App() {
 	return (
 		<div className="min-h-screen flex flex-col">
 			<Navbar />
-			<main className="flex-1 max-w-5xl w-full mx-auto px-5 py-8">
+			<main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8 sm:px-5">
 				<Suspense
 					fallback={
 						<div className="flex min-h-48 items-center justify-center">
@@ -103,7 +107,14 @@ export default function App() {
 								</ProtectedRoute>
 							}
 						/>
-
+						<Route
+							path="/applications/:id"
+							element={
+								<ProtectedRoute role="candidate">
+									<ApplicationDetail />
+								</ProtectedRoute>
+							}
+						/>
 
 						<Route
 							path="/jobs/new"
