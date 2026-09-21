@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class EnsureUserRole
 {
     /**
-     * Usage in routes: ->middleware('role:employer')  or  ->middleware('role:employer,admin')
+     * Usage in routes: ->middleware('role:employer')  or  ->middleware('role:candidate')
      */
     public function handle(Request $request, Closure $next, string ...$roles)
     {

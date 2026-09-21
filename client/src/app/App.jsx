@@ -33,9 +33,6 @@ const ProfileCompany = lazy(
 	() => import('../features/employers/pages/ProfileCompany'),
 );
 const SavedJobs = lazy(() => import('../features/candidates/pages/SavedJobs'));
-const AdminDashboard = lazy(
-	() => import('../features/admin/pages/AdminDashboard'),
-);
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function RoleDashboard() {
@@ -58,7 +55,6 @@ const pageTitles = {
 	'/saved-jobs': 'Your Saved Roles',
 	'/profile/company': 'Company Profile',
 	'/profile/candidate': 'Candidate Profile',
-	'/admin': 'Admin Dashboard',
 };
 
 function getPageTitle(pathname) {
@@ -108,14 +104,6 @@ export default function App() {
 							}
 						/>
 
-						<Route
-							path="/admin"
-							element={
-								<ProtectedRoute role="admin">
-									<AdminDashboard />
-								</ProtectedRoute>
-							}
-						/>
 
 						<Route
 							path="/jobs/new"

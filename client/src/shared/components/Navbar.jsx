@@ -65,15 +65,6 @@ export default function Navbar() {
 						</>
 					)}
 
-					{user?.role === 'admin' && (
-						<Link
-							to="/admin"
-							className="text-ink-muted hover:text-ink transition-colors"
-						>
-							Admin dashboard
-						</Link>
-					)}
-
 					{user?.role === 'employer' && (
 						<>
 							<Link
@@ -164,16 +155,6 @@ export default function Navbar() {
 								Profile
 							</Link>
 						</>
-					)}
-
-					{user?.role === 'admin' && (
-						<Link
-							to="/admin"
-							className="block text-ink-muted hover:text-ink transition-colors"
-							onClick={() => setIsMenuOpen(false)}
-						>
-							Admin dashboard
-						</Link>
 					)}
 
 					{user?.role === 'employer' && (

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\ApplicationController;
-use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\JobController;
@@ -58,7 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     | Employer-only routes
     |----------------------------------------------------------------------
     */
-    Route::middleware('role:employer,admin')->group(function () {
+    Route::middleware('role:employer')->group(function () {
         Route::put('/profile/company', [ProfileController::class, 'updateCompanyProfile']);
 
         Route::get('/my-jobs', [JobController::class, 'myJobs']);
@@ -68,21 +67,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/applications/{application}', [ApplicationController::class, 'updateStatus']);
     });
 
-    /*
-    |----------------------------------------------------------------------
-    | Admin-only routes
-    |----------------------------------------------------------------------
-    */
-    Route::middleware('role:admin')->prefix('admin')->group(function () {
-        Route::get('/users', [AdminController::class, 'users']);
-        Route::patch('/users/{user}', [AdminController::class, 'updateUser']);
-        Route::delete('/users/{user}', [AdminController::class, 'deleteUser']);
-        Route::get('/jobs', [AdminController::class, 'jobs']);
-        Route::patch('/jobs/{job}/status', [AdminController::class, 'updateJobStatus']);
-        Route::delete('/jobs/{job}', [AdminController::class, 'deleteJob']);
-        Route::get('/applications', [AdminController::class, 'applications']);
-        Route::patch('/applications/{application}/status', [AdminController::class, 'updateApplicationStatus']);
-        Route::delete('/applications/{application}', [AdminController::class, 'deleteApplication']);
-    });
 });
 });
