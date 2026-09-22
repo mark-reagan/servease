@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from '../shared/components/Navbar';
 import ProtectedRoute from '../shared/components/ProtectedRoute';
 import { useAuth } from '../features/auth/context/AuthContext';
-import Spinner from '../shared/components/Spinner';
+import PageSkeleton from '../shared/components/PageSkeleton';
 
 const Home = lazy(() => import('../features/jobs/pages/Home'));
 const JobDetail = lazy(() => import('../features/jobs/pages/JobDetail'));
@@ -86,8 +86,8 @@ export default function App() {
 			<main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8 sm:px-5">
 				<Suspense
 					fallback={
-						<div className="flex min-h-48 items-center justify-center">
-							<Spinner label="Loading page" />
+						<div className="min-h-48 py-4">
+							<PageSkeleton />
 						</div>
 					}
 				>
