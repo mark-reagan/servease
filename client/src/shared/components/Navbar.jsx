@@ -103,8 +103,15 @@ export default function Navbar() {
 				</button>
 			</div>
 
-			{isMenuOpen && (
-				<nav className="sm:hidden border-t border-line px-5 py-4 space-y-3 text-sm">
+			<nav
+				className={`sm:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+					isMenuOpen
+						? 'max-h-[32rem] opacity-100'
+						: 'max-h-0 opacity-0 pointer-events-none'
+				}`}
+				aria-hidden={!isMenuOpen}
+			>
+				<div className="border-t border-line px-5 py-4 space-y-3 text-sm">
 					<Link
 						to="/"
 						className="block text-ink-muted hover:text-ink transition-colors"
@@ -188,8 +195,8 @@ export default function Navbar() {
 							Log out
 						</button>
 					)}
-				</nav>
-			)}
+				</div>
+			</nav>
 		</header>
 	);
 }
