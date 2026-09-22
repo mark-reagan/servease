@@ -91,83 +91,85 @@ export default function App() {
 						</div>
 					}
 				>
-					<Routes>
-						<Route path="/" element={<Home />} />
-						<Route path="/jobs/:id" element={<JobDetail />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/register" element={<Register />} />
-						<Route path="/forgot-password" element={<ForgotPassword />} />
-						<Route path="/reset-password" element={<ResetPassword />} />
+					<div key={location.pathname} className="page-transition">
+						<Routes>
+							<Route path="/" element={<Home />} />
+							<Route path="/jobs/:id" element={<JobDetail />} />
+							<Route path="/login" element={<Login />} />
+							<Route path="/register" element={<Register />} />
+							<Route path="/forgot-password" element={<ForgotPassword />} />
+							<Route path="/reset-password" element={<ResetPassword />} />
 
-						<Route
-							path="/dashboard"
-							element={
-								<ProtectedRoute>
-									<RoleDashboard />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/applications/:id"
-							element={
-								<ProtectedRoute role="candidate">
-									<ApplicationDetail />
-								</ProtectedRoute>
-							}
-						/>
+							<Route
+								path="/dashboard"
+								element={
+									<ProtectedRoute>
+										<RoleDashboard />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/applications/:id"
+								element={
+									<ProtectedRoute role="candidate">
+										<ApplicationDetail />
+									</ProtectedRoute>
+								}
+							/>
 
-						<Route
-							path="/jobs/new"
-							element={
-								<ProtectedRoute role="employer">
-									<PostJob />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/jobs/:id/edit"
-							element={
-								<ProtectedRoute role="employer">
-									<EditJob />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/jobs/:id/applicants"
-							element={
-								<ProtectedRoute role="employer">
-									<JobApplicants />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/profile/company"
-							element={
-								<ProtectedRoute role="employer">
-									<ProfileCompany />
-								</ProtectedRoute>
-							}
-						/>
+							<Route
+								path="/jobs/new"
+								element={
+									<ProtectedRoute role="employer">
+										<PostJob />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/jobs/:id/edit"
+								element={
+									<ProtectedRoute role="employer">
+										<EditJob />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/jobs/:id/applicants"
+								element={
+									<ProtectedRoute role="employer">
+										<JobApplicants />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/profile/company"
+								element={
+									<ProtectedRoute role="employer">
+										<ProfileCompany />
+									</ProtectedRoute>
+								}
+							/>
 
-						<Route
-							path="/saved-jobs"
-							element={
-								<ProtectedRoute role="candidate">
-									<SavedJobs />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/profile/candidate"
-							element={
-								<ProtectedRoute role="candidate">
-									<ProfileCandidate />
-								</ProtectedRoute>
-							}
-						/>
+							<Route
+								path="/saved-jobs"
+								element={
+									<ProtectedRoute role="candidate">
+										<SavedJobs />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/profile/candidate"
+								element={
+									<ProtectedRoute role="candidate">
+										<ProfileCandidate />
+									</ProtectedRoute>
+								}
+							/>
 
-						<Route path="*" element={<NotFound />} />
-					</Routes>
+							<Route path="*" element={<NotFound />} />
+						</Routes>
+					</div>
 				</Suspense>
 			</main>
 			<footer className="border-t border-line py-6 text-center text-xs text-ink-faint">
