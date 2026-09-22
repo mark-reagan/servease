@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../features/auth/context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import logo from '../../assets/logo.svg';
 
 function navLinkClass({ isActive }) {
 	return `hover:text-amber-dark transition-colors ${
@@ -24,6 +25,7 @@ export default function Navbar() {
 	const { user, logout } = useAuth();
 	const { language, setLanguage, t } = useLanguage();
 	const navigate = useNavigate();
+	const isAuthenticated = Boolean(user);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
@@ -61,13 +63,16 @@ export default function Navbar() {
 				<div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
 					<Link
 						to="/"
-						className="mr-4 flex items-center gap-0 font-display text-xl tracking-[0.12em] text-blue-dark transition-colors hover:text-blue-dark"
+						className="mr-6 flex items-center gap-0 font-display text-xl tracking-[0.12em] text-blue-dark transition-colors hover:text-blue-dark"
 					>
+						<img src={logo} alt="" className="mr-1 h-8 w-8" />
 						<span className="font-black text-blue-dark">SERV</span>
 						<span className="font-light text-amber-dark">EASE</span>
 					</Link>
 
-					<nav className="hidden sm:flex items-center gap-6 text-sm">
+					<nav
+						className={`${isAuthenticated ? 'hidden min-[840px]:flex' : 'hidden sm:flex'} items-center gap-6 text-sm`}
+					>
 						{languageSelector()}
 						<NavLink to="/" className={navLinkClass} end>
 							{t.findWork}
@@ -125,7 +130,7 @@ export default function Navbar() {
 
 					<button
 						type="button"
-						className="sm:hidden text-ink p-2"
+						className={`${isAuthenticated ? 'min-[840px]:hidden' : 'sm:hidden'} text-ink p-2`}
 						onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
 						aria-label={isMenuOpen ? t.closeMenu : t.openMenu}
 						aria-expanded={isMenuOpen}
@@ -135,7 +140,7 @@ export default function Navbar() {
 				</div>
 
 				<nav
-					className={`sm:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+					className={`${isAuthenticated ? 'min-[840px]:hidden' : 'sm:hidden'} overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
 						isMenuOpen
 							? 'max-h-[32rem] opacity-100'
 							: 'max-h-0 opacity-0 pointer-events-none'
