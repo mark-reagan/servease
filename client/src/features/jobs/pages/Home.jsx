@@ -3,24 +3,10 @@ import { api } from '../../../shared/api/client';
 import JobRow from '../components/JobRow';
 import Pagination from '../../../shared/components/Pagination';
 import Spinner from '../../../shared/components/Spinner';
-
-const EMPLOYMENT_TYPES = [
-	{ value: '', label: 'Any type' },
-	{ value: 'full_time', label: 'Full-time' },
-	{ value: 'part_time', label: 'Part-time' },
-	{ value: 'contract', label: 'Contract' },
-	{ value: 'internship', label: 'Internship' },
-	{ value: 'temporary', label: 'Temporary' },
-];
-
-const WORK_MODES = [
-	{ value: '', label: 'Any mode' },
-	{ value: 'on_site', label: 'On-site' },
-	{ value: 'remote', label: 'Remote' },
-	{ value: 'hybrid', label: 'Hybrid' },
-];
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function Home() {
+	const { t } = useLanguage();
 	const [filters, setFilters] = useState({
 		keyword: '',
 		location: '',
@@ -33,27 +19,46 @@ export default function Home() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
 
-	const fetchJobs = useCallback(async (currentFilters, currentPage) => {
-		setLoading(true);
-		setError('');
-		try {
-			const res = await api.get('/jobs', {
-				...currentFilters,
-				page: currentPage,
-			});
-			setJobs(res.data);
-			setMeta(res.meta);
-		} catch {
-			setError('Could not load listings right now.');
-		} finally {
-			setLoading(false);
-		}
-	}, []);
+	const fetchJobs = useCallback(
+		async (currentFilters, currentPage) => {
+			setLoading(true);
+			setError('');
+			try {
+				const res = await api.get('/jobs', {
+					...currentFilters,
+					page: currentPage,
+				});
+				setJobs(res.data);
+				setMeta(res.meta);
+			} catch {
+				setError(t.listingsLoadError);
+			} finally {
+				setLoading(false);
+			}
+		},
+		[t.listingsLoadError],
+	);
+
+	const employmentTypes = [
+		{ value: '', label: t.anyType },
+		{ value: 'full_time', label: t.fullTime },
+		{ value: 'part_time', label: t.partTime },
+		{ value: 'contract', label: t.contract },
+		{ value: 'internship', label: t.internship },
+		{ value: 'temporary', label: t.temporary },
+	];
+
+	const workModes = [
+		{ value: '', label: t.anyMode },
+		{ value: 'on_site', label: t.onSite },
+		{ value: 'remote', label: t.remote },
+		{ value: 'hybrid', label: t.hybrid },
+	];
 
 	useEffect(() => {
 		fetchJobs(filters, page);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [page]);
+	}, [fetchJobs, page]);
 
 	function handleSubmit(e) {
 		e.preventDefault();
@@ -68,27 +73,24 @@ export default function Home() {
 	return (
 		<div>
 			<section className="border-b border-line pb-10 mb-10">
-				<p className="text-sm text-amber-dark mb-2">Serving Quezon, Palawan</p>
+				<p className="text-sm text-amber-dark mb-2">{t.servingLocation}</p>
 				<h1 className="font-display text-4xl sm:text-5xl leading-tight max-w-2xl">
-					Find the right job. Hire the right person.
+					{t.homeTitle}
 				</h1>
-				<p className="text-ink-muted mt-3 max-w-lg">
-					Servease connects people in Quezon, Palawan with local opportunities
-					and trusted candidates.
-				</p>
+				<p className="text-ink-muted mt-3 max-w-lg">{t.homeDescription}</p>
 			</section>
 
 			<form onSubmit={handleSubmit} className="grid sm:grid-cols-5 gap-3 mb-8">
 				<input
 					type="text"
-					placeholder="Service or keyword"
+					placeholder={t.serviceOrKeyword}
 					value={filters.keyword}
 					onChange={(e) => updateFilter('keyword', e.target.value)}
 					className="field-input sm:col-span-2"
 				/>
 				<input
 					type="text"
-					placeholder="Location"
+					placeholder={t.location}
 					value={filters.location}
 					onChange={(e) => updateFilter('location', e.target.value)}
 					className="field-input"
@@ -98,9 +100,9 @@ export default function Home() {
 					onChange={(e) => updateFilter('employment_type', e.target.value)}
 					className="field-input"
 				>
-					{EMPLOYMENT_TYPES.map((t) => (
-						<option key={t.value} value={t.value}>
-							{t.label}
+					{employmentTypes.map((type) => (
+						<option key={type.value} value={type.value}>
+							{type.label}
 						</option>
 					))}
 				</select>
@@ -109,9 +111,9 @@ export default function Home() {
 					onChange={(e) => updateFilter('work_mode', e.target.value)}
 					className="field-input"
 				>
-					{WORK_MODES.map((m) => (
-						<option key={m.value} value={m.value}>
-							{m.label}
+					{workModes.map((mode) => (
+						<option key={mode.value} value={mode.value}>
+							{mode.label}
 						</option>
 					))}
 				</select>
@@ -119,22 +121,20 @@ export default function Home() {
 					type="submit"
 					className="btn-primary sm:col-span-5 sm:justify-self-start"
 				>
-					Find jobs
+					{t.findJobs}
 				</button>
 			</form>
 
 			{loading && (
 				<div className="py-16 flex justify-center">
-					<Spinner label="Fetching listings…" />
+					<Spinner label={t.fetchingListings} />
 				</div>
 			)}
 
 			{!loading && error && <p className="text-rust text-sm">{error}</p>}
 
 			{!loading && !error && jobs.length === 0 && (
-				<p className="text-ink-muted text-sm py-12 text-center">
-					No roles match those filters yet. Try widening your search.
-				</p>
+				<p className="text-ink-muted text-sm py-12 text-center">{t.noRoles}</p>
 			)}
 
 			{!loading && !error && jobs.length > 0 && (

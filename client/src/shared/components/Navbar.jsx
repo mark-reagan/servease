@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../features/auth/context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 function navLinkClass({ isActive }) {
 	return `hover:text-amber-dark transition-colors ${
@@ -21,6 +22,7 @@ function ctaNavLinkClass({ isActive }) {
 
 export default function Navbar() {
 	const { user, logout } = useAuth();
+	const { language, setLanguage, t } = useLanguage();
 	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -36,26 +38,48 @@ export default function Navbar() {
 		setIsLogoutModalOpen(true);
 	}
 
+	function languageSelector(className = '') {
+		return (
+			<label className={`text-ink-muted ${className}`}>
+				<span className="sr-only">{t.language}</span>
+				<select
+					value={language}
+					onChange={(event) => setLanguage(event.target.value)}
+					className="border border-line bg-panel px-2 py-1.5 text-sm text-ink focus:border-ink"
+					aria-label={t.language}
+				>
+					<option value="en">English</option>
+					<option value="fil">Filipino</option>
+				</select>
+			</label>
+		);
+	}
+
 	return (
 		<>
 			<header className="border-b border-line bg-paper/95 backdrop-blur sticky top-0 z-10">
 				<div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
-					<Link to="/" className="font-display text-xl tracking-tight text-ink">
-						Servease
+					<Link
+						to="/"
+						className="mr-4 flex items-center gap-0 font-display text-xl tracking-[0.12em] text-blue-dark transition-colors hover:text-blue-dark"
+					>
+						<span className="font-black text-blue-dark">SERV</span>
+						<span className="font-light text-amber-dark">EASE</span>
 					</Link>
 
 					<nav className="hidden sm:flex items-center gap-6 text-sm">
+						{languageSelector()}
 						<NavLink to="/" className={navLinkClass} end>
-							Find work
+							{t.findWork}
 						</NavLink>
 
 						{!user && (
 							<>
 								<NavLink to="/login" className={navLinkClass}>
-									Log in
+									{t.logIn}
 								</NavLink>
 								<NavLink to="/register" className={ctaNavLinkClass}>
-									Get started
+									{t.getStarted}
 								</NavLink>
 							</>
 						)}
@@ -63,13 +87,13 @@ export default function Navbar() {
 						{user?.role === 'candidate' && (
 							<>
 								<NavLink to="/saved-jobs" className={navLinkClass}>
-									Saved jobs
+									{t.savedJobs}
 								</NavLink>
 								<NavLink to="/dashboard" className={navLinkClass}>
-									My applications
+									{t.myApplications}
 								</NavLink>
 								<NavLink to="/profile/candidate" className={navLinkClass}>
-									Profile
+									{t.profile}
 								</NavLink>
 							</>
 						)}
@@ -77,13 +101,13 @@ export default function Navbar() {
 						{user?.role === 'employer' && (
 							<>
 								<NavLink to="/dashboard" className={navLinkClass}>
-									My postings
+									{t.myPostings}
 								</NavLink>
 								<NavLink to="/jobs/new" className={ctaNavLinkClass}>
-									Post a job
+									{t.postJob}
 								</NavLink>
 								<NavLink to="/profile/company" className={navLinkClass}>
-									Company profile
+									{t.companyProfile}
 								</NavLink>
 							</>
 						)}
@@ -94,7 +118,7 @@ export default function Navbar() {
 								onClick={openLogoutModal}
 								className="btn text-rust hover:bg-rust hover:text-paper"
 							>
-								Log out
+								{t.logOut}
 							</button>
 						)}
 					</nav>
@@ -103,7 +127,7 @@ export default function Navbar() {
 						type="button"
 						className="sm:hidden text-ink p-2"
 						onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-						aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+						aria-label={isMenuOpen ? t.closeMenu : t.openMenu}
 						aria-expanded={isMenuOpen}
 					>
 						{isMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -119,13 +143,14 @@ export default function Navbar() {
 					aria-hidden={!isMenuOpen}
 				>
 					<div className="border-t border-line px-5 py-4 space-y-3 text-sm">
+						{languageSelector('block')}
 						<NavLink
 							to="/"
 							className={mobileNavLinkClass}
 							onClick={() => setIsMenuOpen(false)}
 							end
 						>
-							Find work
+							{t.findWork}
 						</NavLink>
 						{!user && (
 							<>
@@ -134,7 +159,7 @@ export default function Navbar() {
 									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									Log in
+									{t.logIn}
 								</NavLink>
 								<NavLink
 									to="/register"
@@ -143,7 +168,7 @@ export default function Navbar() {
 									}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									Get started
+									{t.getStarted}
 								</NavLink>
 							</>
 						)}
@@ -155,21 +180,21 @@ export default function Navbar() {
 									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									Saved jobs
+									{t.savedJobs}
 								</NavLink>
 								<NavLink
 									to="/dashboard"
 									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									My applications
+									{t.myApplications}
 								</NavLink>
 								<NavLink
 									to="/profile/candidate"
 									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									Profile
+									{t.profile}
 								</NavLink>
 							</>
 						)}
@@ -181,7 +206,7 @@ export default function Navbar() {
 									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									My postings
+									{t.myPostings}
 								</NavLink>
 								<NavLink
 									to="/jobs/new"
@@ -190,14 +215,14 @@ export default function Navbar() {
 									}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									Post a job
+									{t.postJob}
 								</NavLink>
 								<NavLink
 									to="/profile/company"
 									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
-									Company profile
+									{t.companyProfile}
 								</NavLink>
 							</>
 						)}
@@ -208,7 +233,7 @@ export default function Navbar() {
 								onClick={openLogoutModal}
 								className="btn text-rust hover:bg-rust hover:text-paper px-0"
 							>
-								Log out
+								{t.logOut}
 							</button>
 						)}
 					</div>
@@ -239,10 +264,10 @@ export default function Navbar() {
 						}}
 					>
 						<h2 id="logout-title" className="font-display text-2xl text-ink">
-							Log out?
+							{t.logOutTitle}
 						</h2>
 						<p id="logout-description" className="mt-2 text-sm text-ink-muted">
-							Are you sure you want to log out of your account?
+							{t.logOutDescription}
 						</p>
 						<div className="mt-6 flex justify-end gap-3">
 							<button
@@ -250,14 +275,14 @@ export default function Navbar() {
 								className="btn-outline"
 								onClick={() => setIsLogoutModalOpen(false)}
 							>
-								Cancel
+								{t.cancel}
 							</button>
 							<button
 								type="button"
 								className="btn bg-rust text-paper hover:bg-rust-dark"
 								onClick={handleLogout}
 							>
-								Log out
+								{t.logOut}
 							</button>
 						</div>
 					</div>

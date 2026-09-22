@@ -4,6 +4,7 @@ import Navbar from '../shared/components/Navbar';
 import ProtectedRoute from '../shared/components/ProtectedRoute';
 import { useAuth } from '../features/auth/context/AuthContext';
 import PageSkeleton from '../shared/components/PageSkeleton';
+import { useLanguage } from '../shared/context/LanguageContext';
 
 const Home = lazy(() => import('../features/jobs/pages/Home'));
 const JobDetail = lazy(() => import('../features/jobs/pages/JobDetail'));
@@ -47,38 +48,39 @@ function RoleDashboard() {
 	);
 }
 
-const pageTitles = {
-	'/': 'Find Your Next Gig',
-	'/login': 'Welcome Back',
-	'/register': 'Join the Crew',
-	'/forgot-password': 'Forgot Your Password',
-	'/reset-password': 'Reset Your Password',
-	'/dashboard': 'Your Workspace',
-	'/jobs/new': 'Post a New Opportunity',
-	'/saved-jobs': 'Your Saved Roles',
-	'/profile/company': 'Company Profile',
-	'/profile/candidate': 'Candidate Profile',
-};
+function getPageTitle(pathname, pageTitles) {
+	const exactTitles = {
+		'/': pageTitles.home,
+		'/login': pageTitles.login,
+		'/register': pageTitles.register,
+		'/forgot-password': pageTitles.forgotPassword,
+		'/reset-password': pageTitles.resetPassword,
+		'/dashboard': pageTitles.dashboard,
+		'/jobs/new': pageTitles.postJob,
+		'/saved-jobs': pageTitles.savedJobs,
+		'/profile/company': pageTitles.companyProfile,
+		'/profile/candidate': pageTitles.candidateProfile,
+	};
 
-function getPageTitle(pathname) {
-	if (pathname === '/') return pageTitles['/'];
-	if (pageTitles[pathname]) return pageTitles[pathname];
+	if (exactTitles[pathname]) return exactTitles[pathname];
+	if (/^\/jobs\/[^/]+$/.test(pathname)) return pageTitles.jobDetails;
+	if (/^\/jobs\/[^/]+\/edit$/.test(pathname)) return pageTitles.editJob;
+	if (/^\/jobs\/[^/]+\/applicants$/.test(pathname))
+		return pageTitles.applicants;
+	if (/^\/applications\/[^/]+$/.test(pathname))
+		return pageTitles.applicationDetails;
+	if (pathname === '*') return pageTitles.pageNotFound;
 
-	if (/^\/jobs\/[^/]+$/.test(pathname)) return 'Job Details';
-	if (/^\/jobs\/[^/]+\/edit$/.test(pathname)) return 'Edit Job';
-	if (/^\/jobs\/[^/]+\/applicants$/.test(pathname)) return 'Applicants';
-	if (/^\/applications\/[^/]+$/.test(pathname)) return 'Application Details';
-	if (pathname === '*') return 'Page Not Found';
-
-	return 'Page';
+	return pageTitles.page;
 }
 
 export default function App() {
 	const location = useLocation();
+	const { t } = useLanguage();
 
 	useEffect(() => {
-		document.title = `Servease | ${getPageTitle(location.pathname)}`;
-	}, [location.pathname]);
+		document.title = `Servease | ${getPageTitle(location.pathname, t.pageTitles)}`;
+	}, [location.pathname, t.pageTitles]);
 
 	return (
 		<div className="min-h-screen flex flex-col">
@@ -173,7 +175,7 @@ export default function App() {
 				</Suspense>
 			</main>
 			<footer className="border-t border-line py-6 text-center text-xs text-ink-faint">
-				Servease — find your next move, make it count
+				{t.footer}
 			</footer>
 		</div>
 	);
