@@ -73,7 +73,7 @@ export default function Home() {
 					Find the right job. Hire the right person.
 				</h1>
 				<p className="text-ink-muted mt-3 max-w-lg">
-					ServEase connects people in Quezon, Palawan with local opportunities
+					Servease connects people in Quezon, Palawan with local opportunities
 					and trusted candidates.
 				</p>
 			</section>

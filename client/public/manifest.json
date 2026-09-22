@@ -1,6 +1,6 @@
 {
-	"name": "ServEase Job Board",
-	"short_name": "ServEase",
+	"name": "Servease Job Board",
+	"short_name": "Servease",
 	"description": "A considered place to find and share meaningful work.",
 	"start_url": "/",
 	"display": "standalone",

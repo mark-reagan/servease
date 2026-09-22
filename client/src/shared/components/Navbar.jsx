@@ -41,7 +41,7 @@ export default function Navbar() {
 			<header className="border-b border-line bg-paper/95 backdrop-blur sticky top-0 z-10">
 				<div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
 					<Link to="/" className="font-display text-xl tracking-tight text-ink">
-						ServEase
+						Servease
 					</Link>
 
 					<nav className="hidden sm:flex items-center gap-6 text-sm">

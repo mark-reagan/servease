@@ -47,7 +47,7 @@ export default function Register() {
 
 	return (
 		<div className="max-w-sm mx-auto py-10">
-			<h1 className="font-display text-3xl mb-1">Join ServEase</h1>
+			<h1 className="font-display text-3xl mb-1">Join Servease</h1>
 			<p className="text-ink-muted text-sm mb-8">
 				Set up an account as a candidate or an employer.
 			</p>
