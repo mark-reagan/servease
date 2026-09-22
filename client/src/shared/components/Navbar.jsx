@@ -1,7 +1,23 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../features/auth/context/AuthContext';
+
+function navLinkClass({ isActive }) {
+	return `hover:text-amber-dark transition-colors ${
+		isActive ? 'text-amber-dark' : 'text-ink-muted'
+	}`;
+}
+
+function mobileNavLinkClass({ isActive }) {
+	return `block hover:text-amber-dark transition-colors ${
+		isActive ? 'text-amber-dark' : 'text-ink-muted'
+	}`;
+}
+
+function ctaNavLinkClass({ isActive }) {
+	return isActive ? 'btn bg-amber-dark text-paper' : 'btn-primary';
+}
 
 export default function Navbar() {
 	const { user, logout } = useAuth();
@@ -29,67 +45,46 @@ export default function Navbar() {
 					</Link>
 
 					<nav className="hidden sm:flex items-center gap-6 text-sm">
-						<Link
-							to="/"
-							className="text-ink-muted hover:text-ink transition-colors"
-						>
+						<NavLink to="/" className={navLinkClass} end>
 							Find work
-						</Link>
+						</NavLink>
 
 						{!user && (
 							<>
-								<Link
-									to="/login"
-									className="text-ink-muted hover:text-ink transition-colors"
-								>
+								<NavLink to="/login" className={navLinkClass}>
 									Log in
-								</Link>
-								<Link to="/register" className="btn-primary">
+								</NavLink>
+								<NavLink to="/register" className={ctaNavLinkClass}>
 									Get started
-								</Link>
+								</NavLink>
 							</>
 						)}
 
 						{user?.role === 'candidate' && (
 							<>
-								<Link
-									to="/saved-jobs"
-									className="text-ink-muted hover:text-ink transition-colors"
-								>
+								<NavLink to="/saved-jobs" className={navLinkClass}>
 									Saved jobs
-								</Link>
-								<Link
-									to="/dashboard"
-									className="text-ink-muted hover:text-ink transition-colors"
-								>
+								</NavLink>
+								<NavLink to="/dashboard" className={navLinkClass}>
 									My applications
-								</Link>
-								<Link
-									to="/profile/candidate"
-									className="text-ink-muted hover:text-ink transition-colors"
-								>
+								</NavLink>
+								<NavLink to="/profile/candidate" className={navLinkClass}>
 									Profile
-								</Link>
+								</NavLink>
 							</>
 						)}
 
 						{user?.role === 'employer' && (
 							<>
-								<Link
-									to="/dashboard"
-									className="text-ink-muted hover:text-ink transition-colors"
-								>
+								<NavLink to="/dashboard" className={navLinkClass}>
 									My postings
-								</Link>
-								<Link to="/jobs/new" className="btn-primary">
+								</NavLink>
+								<NavLink to="/jobs/new" className={ctaNavLinkClass}>
 									Post a job
-								</Link>
-								<Link
-									to="/profile/company"
-									className="text-ink-muted hover:text-ink transition-colors"
-								>
+								</NavLink>
+								<NavLink to="/profile/company" className={navLinkClass}>
 									Company profile
-								</Link>
+								</NavLink>
 							</>
 						)}
 
@@ -124,81 +119,86 @@ export default function Navbar() {
 					aria-hidden={!isMenuOpen}
 				>
 					<div className="border-t border-line px-5 py-4 space-y-3 text-sm">
-						<Link
+						<NavLink
 							to="/"
-							className="block text-ink-muted hover:text-ink transition-colors"
+							className={mobileNavLinkClass}
 							onClick={() => setIsMenuOpen(false)}
+							end
 						>
 							Find work
-						</Link>
+						</NavLink>
 						{!user && (
 							<>
-								<Link
+								<NavLink
 									to="/login"
-									className="block text-ink-muted hover:text-ink transition-colors"
+									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									Log in
-								</Link>
-								<Link
+								</NavLink>
+								<NavLink
 									to="/register"
-									className="btn-primary w-full"
+									className={({ isActive }) =>
+										`${ctaNavLinkClass({ isActive })} w-full`
+									}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									Get started
-								</Link>
+								</NavLink>
 							</>
 						)}
 
 						{user?.role === 'candidate' && (
 							<>
-								<Link
+								<NavLink
 									to="/saved-jobs"
-									className="block text-ink-muted hover:text-ink transition-colors"
+									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									Saved jobs
-								</Link>
-								<Link
+								</NavLink>
+								<NavLink
 									to="/dashboard"
-									className="block text-ink-muted hover:text-ink transition-colors"
+									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									My applications
-								</Link>
-								<Link
+								</NavLink>
+								<NavLink
 									to="/profile/candidate"
-									className="block text-ink-muted hover:text-ink transition-colors"
+									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									Profile
-								</Link>
+								</NavLink>
 							</>
 						)}
 
 						{user?.role === 'employer' && (
 							<>
-								<Link
+								<NavLink
 									to="/dashboard"
-									className="block text-ink-muted hover:text-ink transition-colors"
+									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									My postings
-								</Link>
-								<Link
+								</NavLink>
+								<NavLink
 									to="/jobs/new"
-									className="btn-primary w-full"
+									className={({ isActive }) =>
+										`${ctaNavLinkClass({ isActive })} w-full`
+									}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									Post a job
-								</Link>
-								<Link
+								</NavLink>
+								<NavLink
 									to="/profile/company"
-									className="block text-ink-muted hover:text-ink transition-colors"
+									className={mobileNavLinkClass}
 									onClick={() => setIsMenuOpen(false)}
 								>
 									Company profile
-								</Link>
+								</NavLink>
 							</>
 						)}
 
