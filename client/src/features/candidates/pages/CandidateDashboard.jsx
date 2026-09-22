@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../../shared/api/client';
 import Spinner from '../../../shared/components/Spinner';
 import StatusTag from '../../../shared/components/StatusTag';
@@ -10,6 +10,7 @@ export default function CandidateDashboard() {
 	const [meta, setMeta] = useState(null);
 	const [page, setPage] = useState(1);
 	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		let cancelled = false;
@@ -37,9 +38,13 @@ export default function CandidateDashboard() {
 		setApplications((apps) => apps.filter((a) => a.id !== id));
 	}
 
+	function openApplication(id) {
+		navigate(`/applications/${id}`);
+	}
+
 	return (
 		<div>
-			<div className="flex items-baseline justify-between mb-8">
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between mb-8">
 				<div>
 					<h1 className="font-display text-3xl">Your applications</h1>
 					<p className="text-ink-muted text-sm mt-1">
@@ -74,21 +79,36 @@ export default function CandidateDashboard() {
 				applications.map((app) => (
 					<div
 						key={app.id}
-						className="flex items-center justify-between border-b border-line py-4"
+						role="link"
+						tabIndex={0}
+						onClick={() => openApplication(app.id)}
+						onKeyDown={(event) => {
+							if (event.key === 'Enter' || event.key === ' ') {
+								event.preventDefault();
+								openApplication(app.id);
+							}
+						}}
+						className="group flex cursor-pointer items-center justify-between gap-4 border-b border-line py-4 pl-0 transition-colors hover:bg-panel/60 sm:pl-6"
 					>
-						<div>
-							<Link
-								to={`/applications/${app.id}`}
-								className="font-display text-lg hover:text-amber-dark transition-colors"
-							>
-								{app.job.title}
-							</Link>
-							<p className="text-sm text-ink-muted">{app.job.company}</p>
+						<div
+							className="hidden w-1 shrink-0 self-stretch bg-transparent transition-colors group-hover:bg-amber sm:block"
+							aria-hidden="true"
+						/>
+						<div className="flex flex-1 items-center justify-between">
+							<div>
+								<p className="font-display text-lg hover:text-amber-dark transition-colors">
+									{app.job.title}
+								</p>
+								<p className="text-sm text-ink-muted">{app.job.company}</p>
+							</div>
+							<StatusTag status={app.status} />
 						</div>
 						<div className="flex items-center gap-4">
-							<StatusTag status={app.status} />
 							<button
-								onClick={() => handleWithdraw(app.id)}
+								onClick={(event) => {
+									event.stopPropagation();
+									handleWithdraw(app.id);
+								}}
 								className="btn-ghost text-xs"
 							>
 								Withdraw

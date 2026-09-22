@@ -26,7 +26,7 @@ export default function StatusTag({ status }) {
 
 	return (
 		<span
-			className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${style}`}
+			className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-center text-xs font-medium ${style}`}
 		>
 			{label}
 		</span>

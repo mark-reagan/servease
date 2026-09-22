@@ -81,8 +81,8 @@ export default function ApplicationDetail() {
 				Your applications
 			</Link>
 
-			<article className="mt-5 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
-				<header className="flex flex-col gap-4 border-b border-line px-6 py-6 sm:flex-row sm:items-start sm:justify-between sm:px-8">
+			<article className="mt-5 overflow-hidden border-gray-100 bg-white shadow-sm">
+				<header className="flex flex-col items-center gap-4 border-b border-line px-6 py-6 sm:flex-row sm:items-start sm:justify-between sm:px-8">
 					<div>
 						<p className="text-xs font-medium uppercase tracking-wide text-ink-faint">
 							Application details
