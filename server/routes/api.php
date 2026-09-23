@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\JobController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SavedJobController;
@@ -23,6 +24,10 @@ Route::get('/reset-password', function () {
     return redirect(env('FRONTEND_URL', 'http://localhost:5173') . '/reset-password' . (request()->getQueryString() ? '?' . request()->getQueryString() : ''));
 })->name('password.reset');
 
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware('signed')
+    ->name('verification.verify');
+
 Route::apiResource('jobs', JobController::class)->only(['index', 'show']);
 Route::get('/companies/{slug}', [CompanyController::class, 'show']);
 
@@ -34,6 +39,8 @@ Route::get('/companies/{slug}', [CompanyController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
+        ->middleware('throttle:verification-notification');
 
     Route::get('/applications/{application}/resume', [ApplicationController::class, 'downloadResume']);
 
@@ -42,7 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
     | Candidate-only routes
     |----------------------------------------------------------------------
     */
-    Route::middleware('role:candidate')->group(function () {
+    Route::middleware(['role:candidate', 'verified'])->group(function () {
         Route::put('/profile/candidate', [ProfileController::class, 'updateCandidateProfile']);
 
         Route::post('/jobs/{job}/apply', [ApplicationController::class, 'apply']);
@@ -60,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     | Employer-only routes
     |----------------------------------------------------------------------
     */
-    Route::middleware('role:employer')->group(function () {
+    Route::middleware(['role:employer', 'verified'])->group(function () {
         Route::put('/profile/company', [ProfileController::class, 'updateCompanyProfile']);
 
         Route::get('/my-jobs', [JobController::class, 'myJobs']);

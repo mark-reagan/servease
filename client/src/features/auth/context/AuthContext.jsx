@@ -43,9 +43,14 @@ export function AuthProvider({ children }) {
 
 	async function register(payload) {
 		const res = await api.post('/register', payload);
-		localStorage.setItem('token', res.token);
-		setUser(res.user.data ?? res.user);
-		return res.user;
+		return res;
+	}
+
+	async function loginWithToken(token) {
+		localStorage.setItem('token', token);
+		const me = await api.get('/me');
+		setUser(me.data ?? me);
+		return me.data ?? me;
 	}
 
 	async function logout() {
@@ -84,6 +89,7 @@ export function AuthProvider({ children }) {
 				loading,
 				login,
 				register,
+				loginWithToken,
 				logout,
 				forgotPassword,
 				resetPassword,

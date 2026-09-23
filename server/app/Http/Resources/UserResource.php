@@ -16,6 +16,7 @@ class UserResource extends JsonResource
             'role' => $this->role,
             'phone' => $this->phone,
             'is_active' => $this->is_active,
+            'email_verified_at' => $this->email_verified_at,
             'candidate_profile' => $this->when(
                 $this->role === 'candidate',
                 fn () => new CandidateProfileResource($this->candidateProfile)

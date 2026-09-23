@@ -19,6 +19,7 @@ export default function Register() {
 	const [errors, setErrors] = useState({});
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [showVerifyModal, setShowVerifyModal] = useState(false);
 
 	function update(key, value) {
 		setForm((f) => ({ ...f, [key]: value }));
@@ -31,7 +32,7 @@ export default function Register() {
 		setErrors({});
 		try {
 			await register(form);
-			navigate(location.state?.from?.pathname || '/');
+			setShowVerifyModal(true);
 		} catch (err) {
 			if (err instanceof ApiError) {
 				setErrors(err.errors || {});
@@ -165,6 +166,26 @@ export default function Register() {
 					Log in
 				</Link>
 			</p>
+
+			{showVerifyModal && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 px-4">
+					<div className="bg-paper max-w-sm w-full p-6 border border-line">
+						<h2 className="font-display text-2xl mb-2">Check your email</h2>
+						<p className="text-sm text-ink-muted mb-6">
+							We've sent a verification link to{' '}
+							<strong className="text-ink">{form.email}</strong>. Please verify
+							your email before logging in.
+						</p>
+						<button
+							type="button"
+							className="btn-primary w-full"
+							onClick={() => navigate('/login', { state: location.state })}
+						>
+							Go to login
+						</button>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

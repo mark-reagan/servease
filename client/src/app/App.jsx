@@ -16,6 +16,9 @@ const ForgotPassword = lazy(
 const ResetPassword = lazy(
 	() => import('../features/auth/pages/ResetPassword'),
 );
+const EmailVerified = lazy(
+	() => import('../features/auth/pages/EmailVerified'),
+);
 const CandidateDashboard = lazy(
 	() => import('../features/candidates/pages/CandidateDashboard'),
 );
@@ -101,6 +104,7 @@ export default function App() {
 							<Route path="/register" element={<Register />} />
 							<Route path="/forgot-password" element={<ForgotPassword />} />
 							<Route path="/reset-password" element={<ResetPassword />} />
+							<Route path="/email-verified" element={<EmailVerified />} />
 
 							<Route
 								path="/dashboard"

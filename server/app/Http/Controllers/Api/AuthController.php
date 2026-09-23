@@ -29,7 +29,7 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        [$user, $token] = DB::transaction(function () use ($data) {
+        $user = DB::transaction(function () use ($data) {
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -48,12 +48,14 @@ class AuthController extends Controller
                 ]);
             }
 
-            return [$user, $user->createToken('api-token')->plainTextToken];
+            return $user;
         });
 
+        $user->sendEmailVerificationNotification();
+
         return response()->json([
+            'message' => 'Registration successful. Please check your email to verify your account before logging in.',
             'user' => new UserResource($user),
-            'token' => $token,
         ], 201);
     }
 
@@ -76,6 +78,10 @@ class AuthController extends Controller
 
         if (! $user->is_active) {
             return response()->json(['message' => 'This account has been deactivated.'], 403);
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Please verify your email address before logging in.'], 403);
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
