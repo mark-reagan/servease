@@ -39,6 +39,7 @@ Route::get('/companies/{slug}', [CompanyController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/account', [AuthController::class, 'updateAccount']);
     Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
         ->middleware('throttle:verification-notification');
 

@@ -134,6 +134,38 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully.']);
     }
 
+    public function updateAccount(Request $request)
+    {
+        $user = $request->user();
+        $data = $request->validate([
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'current_password' => ['required_with:password', 'current_password'],
+            'password' => ['nullable', 'confirmed', 'min:8'],
+        ]);
+
+        if ($data['email'] !== $user->email) {
+            $user->email = $data['email'];
+            $user->email_verified_at = null;
+        }
+
+        if (! empty($data['password'])) {
+            $user->password = $data['password'];
+        }
+
+        $user->save();
+
+        if ($user->wasChanged('email')) {
+            $user->sendEmailVerificationNotification();
+        }
+
+        return response()->json([
+            'message' => $user->wasChanged('email')
+                ? 'Account updated. Please verify your new email address.'
+                : 'Account settings updated.',
+            'user' => new UserResource($user),
+        ]);
+    }
+
     public function me(Request $request)
     {
         return new UserResource($request->user()->load(['candidateProfile', 'companyProfile']));

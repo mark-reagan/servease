@@ -39,6 +39,9 @@ const ProfileCandidate = lazy(
 const ProfileCompany = lazy(
 	() => import('../features/employers/pages/ProfileCompany'),
 );
+const AccountSettings = lazy(
+	() => import('../features/auth/pages/AccountSettings'),
+);
 const SavedJobs = lazy(() => import('../features/candidates/pages/SavedJobs'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
@@ -63,6 +66,7 @@ function getPageTitle(pathname, pageTitles) {
 		'/saved-jobs': pageTitles.savedJobs,
 		'/profile/company': pageTitles.companyProfile,
 		'/profile/candidate': pageTitles.candidateProfile,
+		'/account-settings': 'Account settings',
 	};
 
 	if (exactTitles[pathname]) return exactTitles[pathname];
@@ -152,6 +156,14 @@ export default function App() {
 								element={
 									<ProtectedRoute role="employer">
 										<ProfileCompany />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="/account-settings"
+								element={
+									<ProtectedRoute>
+										<AccountSettings />
 									</ProtectedRoute>
 								}
 							/>
