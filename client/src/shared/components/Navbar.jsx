@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, Moon, Sun, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../features/auth/context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
@@ -30,6 +30,23 @@ export default function Navbar() {
 	const isAuthenticated = Boolean(user);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+	const mobileMenuRef = useRef(null);
+	const mobileMenuToggleRef = useRef(null);
+
+	useEffect(() => {
+		function handlePointerDown(event) {
+			if (
+				isMenuOpen &&
+				!mobileMenuRef.current?.contains(event.target) &&
+				!mobileMenuToggleRef.current?.contains(event.target)
+			) {
+				setIsMenuOpen(false);
+			}
+		}
+
+		document.addEventListener('pointerdown', handlePointerDown);
+		return () => document.removeEventListener('pointerdown', handlePointerDown);
+	}, [isMenuOpen]);
 
 	async function handleLogout() {
 		setIsLogoutModalOpen(false);
@@ -150,6 +167,7 @@ export default function Navbar() {
 						{themeToggle()}
 						<button
 							type="button"
+							ref={mobileMenuToggleRef}
 							className="text-ink p-2"
 							onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
 							aria-label={isMenuOpen ? t.closeMenu : t.openMenu}
@@ -161,6 +179,7 @@ export default function Navbar() {
 				</div>
 
 				<nav
+					ref={mobileMenuRef}
 					className={`${isAuthenticated ? 'min-[840px]:hidden' : 'sm:hidden'} overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
 						isMenuOpen
 							? 'max-h-[32rem] opacity-100'
