@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../../shared/api/client';
 import Spinner from '../../../shared/components/Spinner';
-import StatusTag from '../../../shared/components/StatusTag';
 import Pagination from '../../../shared/components/Pagination';
-import { formatSalary } from '../../../shared/lib/format';
 import { useLanguage } from '../../../shared/context/LanguageContext';
+import JobRow from '../../jobs/components/JobRow';
 
 export default function EmployerDashboard() {
 	const { t } = useLanguage();
@@ -71,49 +70,33 @@ export default function EmployerDashboard() {
 
 			{!loading &&
 				jobs.map((job) => (
-					<article
-						key={job.id}
-						className="mb-4 overflow-hidden border border-gray-100 border-l-4 border-l-amber bg-white shadow-sm last:mb-0"
-					>
-						<div className="flex items-start justify-between gap-4 px-5 py-5 sm:px-6">
-							<div className="min-w-0">
+					<article key={job.id}>
+						<JobRow job={job} />
+						<div className="flex flex-wrap items-center justify-between gap-2 pb-5 pl-5">
+							<span className="text-xs text-ink-faint">
+								{job.applications_count ?? 0} {t.applicant}
+								{job.applications_count === 1 ? '' : 's'}
+							</span>
+							<div className="flex flex-wrap items-center justify-end gap-2">
 								<Link
-									to={`/jobs/${job.id}`}
-									className="font-display text-lg leading-tight"
+									to={`/jobs/${job.id}/applicants`}
+									className="btn-outline px-3 text-xs"
 								>
-									{job.title}
+									{t.applicants}
 								</Link>
-								<div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-sm text-ink-muted">
-									<span>{formatSalary(job) || t.salaryNotListed}</span>
-									<span aria-hidden="true">·</span>
-									<span>
-										{job.applications_count ?? 0} {t.applicant}
-										{job.applications_count === 1 ? '' : 's'}
-									</span>
-								</div>
+								<Link
+									to={`/jobs/${job.id}/edit`}
+									className="btn-ghost px-3 text-xs"
+								>
+									{t.edit}
+								</Link>
+								<button
+									onClick={() => handleDelete(job.id)}
+									className="btn-ghost px-3 text-xs text-rust"
+								>
+									{t.delete}
+								</button>
 							</div>
-							<StatusTag status={job.status} />
-						</div>
-
-						<div className="grid grid-cols-3 gap-2 border-t border-line bg-gray-50 px-4 py-3 sm:flex sm:justify-end sm:px-6">
-							<Link
-								to={`/jobs/${job.id}/applicants`}
-								className="btn-outline w-full px-2 text-xs sm:w-auto sm:px-4"
-							>
-								{t.applicants}
-							</Link>
-							<Link
-								to={`/jobs/${job.id}/edit`}
-								className="btn-ghost w-full px-2 text-xs sm:w-auto sm:px-4"
-							>
-								{t.edit}
-							</Link>
-							<button
-								onClick={() => handleDelete(job.id)}
-								className="btn-ghost w-full px-2 text-xs text-rust sm:w-auto sm:px-4"
-							>
-								{t.delete}
-							</button>
 						</div>
 					</article>
 				))}

@@ -88,22 +88,20 @@ export default function CandidateDashboard() {
 								openApplication(app.id);
 							}
 						}}
-						className="group flex cursor-pointer items-center justify-between gap-4 border-b border-line py-4 pl-0 transition-colors hover:bg-panel/60 sm:pl-6"
+						className="group grid cursor-pointer grid-cols-[0.25rem_minmax(0,1fr)] gap-x-4 gap-y-3 border-b border-line py-5 -mx-2 px-2 transition-colors hover:bg-panel/60 sm:flex sm:gap-4"
 					>
 						<div
-							className="hidden w-1 shrink-0 self-stretch bg-transparent transition-colors group-hover:bg-amber sm:block"
+							className={`row-span-2 w-1 shrink-0 self-stretch ${app.job?.work_mode === 'remote' ? 'bg-teal' : 'bg-amber'}`}
 							aria-hidden="true"
 						/>
-						<div className="flex flex-1 items-center justify-between">
-							<div>
-								<p className="font-display text-lg hover:text-amber-dark transition-colors">
-									{app.job.title}
-								</p>
-								<p className="text-sm text-ink-muted">{app.job.company}</p>
-							</div>
-							<StatusTag status={app.status} />
+						<div className="min-w-0 flex-1">
+							<p className="font-display text-lg text-ink transition-colors group-hover:text-amber-dark">
+								{app.job.title}
+							</p>
+							<p className="text-sm text-ink-muted">{app.job.company}</p>
 						</div>
-						<div className="flex items-center gap-4">
+						<div className="col-start-2 flex items-center justify-between gap-3 sm:ml-auto sm:justify-start">
+							<StatusTag status={app.status} />
 							<button
 								onClick={(event) => {
 									event.stopPropagation();

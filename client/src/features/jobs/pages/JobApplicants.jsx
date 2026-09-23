@@ -157,14 +157,14 @@ export default function JobApplicants() {
 			)}
 
 			{!loading && (
-				<div className="space-y-5">
+				<div>
 					{applications.map((app) => {
 						const isExpanded = expandedApplications.has(app.id);
 
 						return (
 							<article
 								key={app.id}
-								className={`overflow-hidden border border-gray-100 border-l-4 border-l-amber bg-white shadow-sm transition-colors ${isExpanded ? '' : 'hover:bg-[#eeece5]'}`}
+								className={`group overflow-hidden border-b border-line py-5 -mx-2 px-2 transition-colors ${isExpanded ? '' : 'hover:bg-panel/60'}`}
 							>
 								<header
 									onClick={() => toggleApplication(app.id)}
@@ -175,10 +175,14 @@ export default function JobApplicants() {
 									tabIndex={0}
 									aria-expanded={isExpanded}
 									aria-controls={`application-details-${app.id}`}
-									className={`flex cursor-pointer flex-col gap-4 px-6 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-8 ${isExpanded ? 'border-b border-line' : ''}`}
+									className={`flex cursor-pointer items-start gap-4 ${isExpanded ? 'border-b border-line pb-5' : ''}`}
 								>
-									<div>
-										<p className="font-display text-xl text-ink">
+									<div
+										className="w-1 shrink-0 self-stretch bg-amber"
+										aria-hidden="true"
+									/>
+									<div className="min-w-0 flex-1">
+										<p className="font-display text-lg text-ink transition-colors group-hover:text-amber-dark">
 											{app.candidate?.name}
 										</p>
 										<a
@@ -195,7 +199,7 @@ export default function JobApplicants() {
 											</p>
 										)}
 									</div>
-									<div className="flex items-center gap-3">
+									<div className="flex shrink-0 items-center gap-3">
 										<StatusTag status={app.status} />
 										<button
 											type="button"
@@ -208,7 +212,7 @@ export default function JobApplicants() {
 											aria-label={
 												isExpanded ? t.collapseApplicant : t.expandApplicant
 											}
-											className="btn-ghost h-8 w-8 p-0 text-ink-muted hover:bg-gray-50"
+											className="btn-ghost h-8 w-8 p-0 text-ink-muted hover:bg-panel"
 										>
 											<ChevronDown
 												size={18}
@@ -274,7 +278,7 @@ export default function JobApplicants() {
 											</p>
 										</section>
 
-										<footer className="flex flex-col gap-2 border-t border-line bg-gray-50 px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+										<footer className="flex flex-col gap-2 border-t border-line bg-panel px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
 											<label
 												className="text-sm font-medium text-ink-muted"
 												htmlFor={`status-${app.id}`}

@@ -21,6 +21,7 @@ class ApplicationResource extends JsonResource
                 'id' => $this->job?->id,
                 'title' => $this->job?->title,
                 'company' => $this->job?->companyProfile?->company_name,
+                'work_mode' => $this->job?->work_mode,
             ],
             'candidate' => $this->when(
                 $request->user()?->isEmployer() || $request->user()?->isAdmin(),

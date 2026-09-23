@@ -83,7 +83,7 @@ export default function ApplicationDetail() {
 				{t.yourApplications}
 			</Link>
 
-			<article className="mt-5 overflow-hidden border-gray-100 bg-white shadow-sm">
+			<article className="panel mt-5 overflow-hidden">
 				<header className="flex flex-col items-center gap-4 border-b border-line px-6 py-6 sm:flex-row sm:items-start sm:justify-between sm:px-8">
 					<div>
 						<p className="text-xs font-medium uppercase tracking-wide text-ink-faint">
@@ -147,7 +147,7 @@ export default function ApplicationDetail() {
 					</p>
 				</section>
 
-				<footer className="flex justify-end border-t border-line bg-gray-50 px-6 py-4 sm:px-8">
+				<footer className="flex justify-end border-t border-line bg-panel px-6 py-4 sm:px-8">
 					<Link to={`/jobs/${application.job?.id}`} className="btn-primary">
 						{t.viewJobPosting}
 						<ExternalLink size={16} aria-hidden="true" />
