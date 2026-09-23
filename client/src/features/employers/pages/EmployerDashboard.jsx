@@ -5,8 +5,10 @@ import Spinner from '../../../shared/components/Spinner';
 import StatusTag from '../../../shared/components/StatusTag';
 import Pagination from '../../../shared/components/Pagination';
 import { formatSalary } from '../../../shared/lib/format';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function EmployerDashboard() {
+	const { t } = useLanguage();
 	const [jobs, setJobs] = useState([]);
 	const [meta, setMeta] = useState(null);
 	const [page, setPage] = useState(1);
@@ -33,7 +35,7 @@ export default function EmployerDashboard() {
 	}, [page]);
 
 	async function handleDelete(id) {
-		if (!confirm('Delete this posting? This cannot be undone.')) return;
+		if (!confirm(t.deletePostingConfirm)) return;
 		await api.delete(`/jobs/${id}`);
 		setJobs((js) => js.filter((j) => j.id !== id));
 	}
@@ -42,17 +44,15 @@ export default function EmployerDashboard() {
 		<div>
 			<div className="flex flex-col gap-5 mb-8 sm:flex-row sm:items-baseline sm:justify-between">
 				<div>
-					<h1 className="font-display text-3xl">Your postings</h1>
-					<p className="text-ink-muted text-sm mt-1">
-						Manage jobs and review applicants.
-					</p>
+					<h1 className="font-display text-3xl">{t.yourPostings}</h1>
+					<p className="text-ink-muted text-sm mt-1">{t.manageJobs}</p>
 				</div>
 				<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
 					<Link to="/profile/company" className="btn-outline w-full sm:w-auto">
-						Company profile
+						{t.companyProfile}
 					</Link>
 					<Link to="/jobs/new" className="btn-primary w-full sm:w-auto">
-						Post a job
+						{t.postJob}
 					</Link>
 				</div>
 			</div>
@@ -65,7 +65,7 @@ export default function EmployerDashboard() {
 
 			{!loading && jobs.length === 0 && (
 				<p className="text-ink-muted text-sm py-12 text-center">
-					You haven't posted any jobs yet.
+					{t.emptyPostings}
 				</p>
 			)}
 
@@ -84,10 +84,10 @@ export default function EmployerDashboard() {
 									{job.title}
 								</Link>
 								<div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-sm text-ink-muted">
-									<span>{formatSalary(job) || 'Salary not listed'}</span>
+									<span>{formatSalary(job) || t.salaryNotListed}</span>
 									<span aria-hidden="true">·</span>
 									<span>
-										{job.applications_count ?? 0} applicant
+										{job.applications_count ?? 0} {t.applicant}
 										{job.applications_count === 1 ? '' : 's'}
 									</span>
 								</div>
@@ -100,19 +100,19 @@ export default function EmployerDashboard() {
 								to={`/jobs/${job.id}/applicants`}
 								className="btn-outline w-full px-2 text-xs sm:w-auto sm:px-4"
 							>
-								Applicants
+								{t.applicants}
 							</Link>
 							<Link
 								to={`/jobs/${job.id}/edit`}
 								className="btn-ghost w-full px-2 text-xs sm:w-auto sm:px-4"
 							>
-								Edit
+								{t.edit}
 							</Link>
 							<button
 								onClick={() => handleDelete(job.id)}
 								className="btn-ghost w-full px-2 text-xs text-rust sm:w-auto sm:px-4"
 							>
-								Delete
+								{t.delete}
 							</button>
 						</div>
 					</article>

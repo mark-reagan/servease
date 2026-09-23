@@ -10,9 +10,11 @@ import { Link, useParams } from 'react-router-dom';
 import { api } from '../../../shared/api/client';
 import Spinner from '../../../shared/components/Spinner';
 import StatusTag from '../../../shared/components/StatusTag';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function ApplicationDetail() {
 	const { id } = useParams();
+	const { t } = useLanguage();
 	const [application, setApplication] = useState(null);
 	const [loading, setLoading] = useState(true);
 
@@ -51,7 +53,7 @@ export default function ApplicationDetail() {
 			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
 		} catch {
-			alert('Could not download resume.');
+			alert(t.couldNotDownloadResume);
 		}
 	}
 
@@ -66,7 +68,7 @@ export default function ApplicationDetail() {
 	if (!application) {
 		return (
 			<p className="text-ink-muted text-sm py-12 text-center">
-				Application not found.
+				{t.appNotFound}
 			</p>
 		);
 	}
@@ -78,14 +80,14 @@ export default function ApplicationDetail() {
 				className="inline-flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-ink transition-colors"
 			>
 				<ArrowLeft size={16} aria-hidden="true" />
-				Your applications
+				{t.yourApplications}
 			</Link>
 
 			<article className="mt-5 overflow-hidden border-gray-100 bg-white shadow-sm">
 				<header className="flex flex-col items-center gap-4 border-b border-line px-6 py-6 sm:flex-row sm:items-start sm:justify-between sm:px-8">
 					<div>
 						<p className="text-xs font-medium uppercase tracking-wide text-ink-faint">
-							Application details
+							{t.applicationDetails}
 						</p>
 						<h1 className="mt-2 font-display text-3xl text-ink">
 							{application.job?.title}
@@ -102,7 +104,7 @@ export default function ApplicationDetail() {
 						<div className="flex items-center gap-2 text-ink-faint">
 							<CalendarDays size={16} aria-hidden="true" />
 							<p className="text-xs font-medium uppercase tracking-wide">
-								Submitted
+								{t.submitted}
 							</p>
 						</div>
 						<p className="mt-3 text-sm font-medium text-ink">
@@ -118,7 +120,7 @@ export default function ApplicationDetail() {
 						<div className="flex items-center gap-2 text-ink-faint">
 							<FileText size={16} aria-hidden="true" />
 							<p className="text-xs font-medium uppercase tracking-wide">
-								Resume
+								{t.resume}
 							</p>
 						</div>
 						{application.has_resume ? (
@@ -128,26 +130,26 @@ export default function ApplicationDetail() {
 								className="btn-outline mt-3 px-3 py-1.5 text-sm"
 							>
 								<Download size={16} aria-hidden="true" />
-								Download resume
+								{t.downloadResume}
 							</button>
 						) : (
-							<p className="mt-3 text-sm text-ink-muted">No resume attached</p>
+							<p className="mt-3 text-sm text-ink-muted">{t.noResume}</p>
 						)}
 					</section>
 				</div>
 
 				<section className="border-t border-line px-6 py-6 sm:px-8">
 					<p className="text-xs font-medium uppercase tracking-wide text-ink-faint">
-						Cover letter
+						{t.coverLetter}
 					</p>
 					<p className="mt-3 max-w-3xl whitespace-pre-line text-sm leading-6 text-ink-muted">
-						{application.cover_letter || 'No cover letter was included.'}
+						{application.cover_letter || t.noCoverLetter}
 					</p>
 				</section>
 
 				<footer className="flex justify-end border-t border-line bg-gray-50 px-6 py-4 sm:px-8">
 					<Link to={`/jobs/${application.job?.id}`} className="btn-primary">
-						View job posting
+						{t.viewJobPosting}
 						<ExternalLink size={16} aria-hidden="true" />
 					</Link>
 				</footer>

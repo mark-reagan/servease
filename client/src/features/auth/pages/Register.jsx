@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../../../shared/api/client';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function Register() {
 	const { register } = useAuth();
+	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -39,7 +41,7 @@ export default function Register() {
 				const validationMessage = Object.values(err.errors || {}).flat()[0];
 				setError(validationMessage || err.message);
 			} else {
-				setError('Could not create your account.');
+				setError(t.couldNotCreateAccount);
 			}
 		} finally {
 			setLoading(false);
@@ -48,10 +50,8 @@ export default function Register() {
 
 	return (
 		<div className="max-w-sm mx-auto py-10">
-			<h1 className="font-display text-3xl mb-1">Join Servease</h1>
-			<p className="text-ink-muted text-sm mb-8">
-				Set up an account as a candidate or an employer.
-			</p>
+			<h1 className="font-display text-3xl mb-1">{t.joinServease}</h1>
+			<p className="text-ink-muted text-sm mb-8">{t.registerDescription}</p>
 
 			<div className="grid grid-cols-2 gap-2 mb-6">
 				{['candidate', 'employer'].map((role) => (
@@ -65,7 +65,7 @@ export default function Register() {
 								: 'border-line text-ink-muted hover:border-ink'
 						}`}
 					>
-						{role === 'candidate' ? "I'm looking for work" : "I'm hiring"}
+						{role === 'candidate' ? t.lookingForWork : t.hiring}
 					</button>
 				))}
 			</div>
@@ -75,7 +75,7 @@ export default function Register() {
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div>
 					<label className="field-label" htmlFor="name">
-						Full name
+						{t.fullName}
 					</label>
 					<input
 						id="name"
@@ -92,7 +92,7 @@ export default function Register() {
 				{form.role === 'employer' && (
 					<div>
 						<label className="field-label" htmlFor="company_name">
-							Company name
+							{t.companyName}
 						</label>
 						<input
 							id="company_name"
@@ -109,7 +109,7 @@ export default function Register() {
 
 				<div>
 					<label className="field-label" htmlFor="email">
-						Email
+						{t.email}
 					</label>
 					<input
 						id="email"
@@ -126,7 +126,7 @@ export default function Register() {
 
 				<div>
 					<label className="field-label" htmlFor="password">
-						Password
+						{t.password}
 					</label>
 					<input
 						id="password"
@@ -143,7 +143,7 @@ export default function Register() {
 
 				<div>
 					<label className="field-label" htmlFor="password_confirmation">
-						Confirm password
+						{t.confirmPassword}
 					</label>
 					<input
 						id="password_confirmation"
@@ -156,32 +156,32 @@ export default function Register() {
 				</div>
 
 				<button type="submit" className="btn-primary w-full" disabled={loading}>
-					{loading ? 'Creating account…' : 'Create account'}
+					{loading ? t.creatingAccount : t.createAccount}
 				</button>
 			</form>
 
 			<p className="text-sm text-ink-muted mt-6">
-				Already have an account?{' '}
+				{t.alreadyHaveAccount}{' '}
 				<Link to="/login" className="text-amber-dark hover:underline">
-					Log in
+					{t.logIn}
 				</Link>
 			</p>
 
 			{showVerifyModal && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 px-4">
 					<div className="bg-paper max-w-sm w-full p-6 border border-line">
-						<h2 className="font-display text-2xl mb-2">Check your email</h2>
+						<h2 className="font-display text-2xl mb-2">{t.checkEmail}</h2>
 						<p className="text-sm text-ink-muted mb-6">
-							We've sent a verification link to{' '}
+							{t.verificationSent}{' '}
 							<strong className="text-ink">{form.email}</strong>. Please verify
-							your email before logging in.
+							{t.verifyBeforeLogin}
 						</p>
 						<button
 							type="button"
 							className="btn-primary w-full"
 							onClick={() => navigate('/login', { state: location.state })}
 						>
-							Go to login
+							{t.goToLogin}
 						</button>
 					</div>
 				</div>

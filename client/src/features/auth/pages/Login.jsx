@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../../../shared/api/client';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function Login() {
 	const { login } = useAuth();
+	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -21,7 +23,7 @@ export default function Login() {
 			await login(email, password);
 			navigate(location.state?.from?.pathname || '/');
 		} catch (err) {
-			setError(err instanceof ApiError ? err.message : 'Could not log in.');
+			setError(err instanceof ApiError ? err.message : t.couldNotLogin);
 		} finally {
 			setLoading(false);
 		}
@@ -29,17 +31,15 @@ export default function Login() {
 
 	return (
 		<div className="max-w-sm mx-auto py-10">
-			<h1 className="font-display text-3xl mb-1">Welcome back</h1>
-			<p className="text-ink-muted text-sm mb-8">
-				Log in to keep track of your search.
-			</p>
+			<h1 className="font-display text-3xl mb-1">{t.welcomeBack}</h1>
+			<p className="text-ink-muted text-sm mb-8">{t.loginDescription}</p>
 
 			{error && <p className="text-rust text-sm mb-4">{error}</p>}
 
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div>
 					<label className="field-label" htmlFor="email">
-						Email
+						{t.email}
 					</label>
 					<input
 						id="email"
@@ -52,7 +52,7 @@ export default function Login() {
 				</div>
 				<div>
 					<label className="field-label" htmlFor="password">
-						Password
+						{t.password}
 					</label>
 					<input
 						id="password"
@@ -64,20 +64,20 @@ export default function Login() {
 					/>
 				</div>
 				<button type="submit" className="btn-primary w-full" disabled={loading}>
-					{loading ? 'Logging in…' : 'Log in'}
+					{loading ? t.loggingIn : t.logIn}
 				</button>
 			</form>
 
 			<p className="text-sm text-ink-muted mt-6">
-				Forgot your password?{' '}
+				{t.forgotPassword}{' '}
 				<Link to="/forgot-password" className="text-amber-dark hover:underline">
-					Reset it here
+					{t.resetItHere}
 				</Link>
 			</p>
 			<p className="text-sm text-ink-muted mt-2">
-				New here?{' '}
+				{t.newHere}{' '}
 				<Link to="/register" className="text-amber-dark hover:underline">
-					Create an account
+					{t.createAccount}
 				</Link>
 			</p>
 		</div>

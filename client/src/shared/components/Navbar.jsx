@@ -48,9 +48,7 @@ export default function Navbar() {
 				type="button"
 				onClick={toggleTheme}
 				className={`inline-flex items-center justify-center p-1.5 text-ink-muted hover:text-ink transition-colors ${className}`}
-				aria-label={
-					theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
-				}
+				aria-label={theme === 'dark' ? t.switchLightTheme : t.switchDarkTheme}
 			>
 				{theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
 			</button>

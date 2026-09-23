@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { api, ApiError } from '../../../shared/api/client';
 import { useAuth } from '../../auth/context/AuthContext';
 import Spinner from '../../../shared/components/Spinner';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function ProfileCandidate() {
 	const { user, refresh } = useAuth();
+	const { t } = useLanguage();
 	const [form, setForm] = useState(null);
 	const [resumeFile, setResumeFile] = useState(null);
 	const [saving, setSaving] = useState(false);
@@ -56,11 +58,9 @@ export default function ProfileCandidate() {
 		try {
 			await api.put('/profile/candidate', data);
 			await refresh();
-			setMessage('Profile updated.');
+			setMessage(t.profileUpdated);
 		} catch (err) {
-			setError(
-				err instanceof ApiError ? err.message : 'Could not save your profile.',
-			);
+			setError(err instanceof ApiError ? err.message : t.couldNotSaveProfile);
 		} finally {
 			setSaving(false);
 		}
@@ -78,13 +78,13 @@ export default function ProfileCandidate() {
 		<div className="max-w-2xl mx-auto">
 			<div className="flex flex-wrap items-start justify-between gap-4 mb-8">
 				<div>
-					<h1 className="font-display text-3xl mb-1">Your profile</h1>
+					<h1 className="font-display text-3xl mb-1">{t.candidateProfile}</h1>
 					<p className="text-ink-muted text-sm">
-						This is what employers see when you apply.
+						{t.candidateProfileDescription}
 					</p>
 				</div>
 				<Link to="/account-settings" className="btn-outline">
-					Account settings
+					{t.accountSettings}
 				</Link>
 			</div>
 
@@ -94,7 +94,7 @@ export default function ProfileCandidate() {
 			<form onSubmit={handleSubmit} className="space-y-5">
 				<div>
 					<label className="field-label" htmlFor="headline">
-						Headline
+						{t.headline}
 					</label>
 					<input
 						id="headline"
@@ -107,7 +107,7 @@ export default function ProfileCandidate() {
 
 				<div>
 					<label className="field-label" htmlFor="bio">
-						Bio
+						{t.bio}
 					</label>
 					<textarea
 						id="bio"
@@ -121,7 +121,7 @@ export default function ProfileCandidate() {
 				<div className="grid sm:grid-cols-2 gap-4">
 					<div>
 						<label className="field-label" htmlFor="location">
-							Location
+							{t.location}
 						</label>
 						<input
 							id="location"
@@ -132,7 +132,7 @@ export default function ProfileCandidate() {
 					</div>
 					<div>
 						<label className="field-label" htmlFor="years_experience">
-							Years of experience
+							{t.yearsExperience}
 						</label>
 						<input
 							id="years_experience"
@@ -147,7 +147,7 @@ export default function ProfileCandidate() {
 
 				<div>
 					<label className="field-label" htmlFor="skills">
-						Skills (comma-separated)
+						{t.skillsCommaSeparated}
 					</label>
 					<input
 						id="skills"
@@ -160,7 +160,7 @@ export default function ProfileCandidate() {
 				<div className="grid sm:grid-cols-2 gap-4">
 					<div>
 						<label className="field-label" htmlFor="linkedin_url">
-							LinkedIn URL
+							{t.linkedinUrl}
 						</label>
 						<input
 							id="linkedin_url"
@@ -171,7 +171,7 @@ export default function ProfileCandidate() {
 					</div>
 					<div>
 						<label className="field-label" htmlFor="portfolio_url">
-							Portfolio URL
+							{t.portfolioUrl}
 						</label>
 						<input
 							id="portfolio_url"
@@ -184,7 +184,7 @@ export default function ProfileCandidate() {
 
 				<div>
 					<label className="field-label" htmlFor="resume">
-						Resume (PDF or Word)
+						{t.resume}
 					</label>
 					<input
 						id="resume"
@@ -194,9 +194,7 @@ export default function ProfileCandidate() {
 						onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
 					/>
 					{user?.candidate_profile?.resume_path && !resumeFile && (
-						<p className="text-xs text-ink-faint mt-1">
-							A resume is already on file.
-						</p>
+						<p className="text-xs text-ink-faint mt-1">{t.resumeOnFile}</p>
 					)}
 				</div>
 
@@ -206,11 +204,11 @@ export default function ProfileCandidate() {
 						checked={form.open_to_work}
 						onChange={(e) => update('open_to_work', e.target.checked)}
 					/>
-					Open to new roles
+					{t.openToNewRoles}
 				</label>
 
 				<button type="submit" className="btn-primary" disabled={saving}>
-					{saving ? 'Saving…' : 'Save profile'}
+					{saving ? t.savingProfile : t.saveProfile}
 				</button>
 			</form>
 		</div>

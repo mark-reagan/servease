@@ -1,3 +1,5 @@
+import { useLanguage } from '../context/LanguageContext';
+
 const STYLES = {
 	open: 'bg-teal/10 text-teal-dark',
 	closed: 'bg-rust/10 text-rust',
@@ -21,8 +23,19 @@ const LABELS = {
 };
 
 export default function StatusTag({ status }) {
+	const { t } = useLanguage();
+	const labels = {
+		open: t.open,
+		closed: t.closed,
+		draft: t.draft,
+		pending: t.pendingReview,
+		reviewed: t.reviewed,
+		shortlisted: t.shortlisted,
+		rejected: t.notSelected,
+		hired: t.hired,
+	};
 	const style = STYLES[status] || 'bg-line text-ink-muted';
-	const label = LABELS[status] || status;
+	const label = labels[status] || LABELS[status] || status;
 
 	return (
 		<span

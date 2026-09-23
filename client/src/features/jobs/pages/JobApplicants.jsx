@@ -12,6 +12,7 @@ import { api } from '../../../shared/api/client';
 import Spinner from '../../../shared/components/Spinner';
 import StatusTag from '../../../shared/components/StatusTag';
 import Pagination from '../../../shared/components/Pagination';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 const STATUS_OPTIONS = [
 	'pending',
@@ -23,6 +24,7 @@ const STATUS_OPTIONS = [
 
 export default function JobApplicants() {
 	const { id } = useParams();
+	const { t } = useLanguage();
 	const [applications, setApplications] = useState([]);
 	const [meta, setMeta] = useState(null);
 	const [page, setPage] = useState(1);
@@ -84,7 +86,7 @@ export default function JobApplicants() {
 			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
 		} catch {
-			alert('Could not download resume.');
+			alert(t.couldNotDownloadResume);
 		}
 	}
 
@@ -114,18 +116,16 @@ export default function JobApplicants() {
 				className="inline-flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-ink transition-colors"
 			>
 				<ArrowLeft size={16} aria-hidden="true" />
-				Your postings
+				{t.yourPostings}
 			</Link>
 
 			<div className="flex flex-col gap-4 mt-5 mb-8 sm:flex-row sm:items-end sm:justify-between">
 				<div>
-					<h1 className="font-display text-3xl">Applicants</h1>
-					<p className="mt-1 text-sm text-ink-muted">
-						Review candidates and update their hiring status.
-					</p>
+					<h1 className="font-display text-3xl">{t.applicants}</h1>
+					<p className="mt-1 text-sm text-ink-muted">{t.reviewCandidates}</p>
 				</div>
 				<label className="block">
-					<span className="sr-only">Filter applicants by status</span>
+					<span className="sr-only">{t.filterApplicants}</span>
 					<select
 						className="field-input w-full sm:w-auto"
 						value={statusFilter}
@@ -134,10 +134,10 @@ export default function JobApplicants() {
 							setStatusFilter(e.target.value);
 						}}
 					>
-						<option value="">All statuses</option>
+						<option value="">{t.allStatuses}</option>
 						{STATUS_OPTIONS.map((s) => (
 							<option key={s} value={s}>
-								{s[0].toUpperCase() + s.slice(1)}
+								{t[s]}
 							</option>
 						))}
 					</select>
@@ -152,7 +152,7 @@ export default function JobApplicants() {
 
 			{!loading && applications.length === 0 && (
 				<p className="text-ink-muted text-sm py-12 text-center">
-					No applicants match this filter yet.
+					{t.noApplicants}
 				</p>
 			)}
 
@@ -206,9 +206,7 @@ export default function JobApplicants() {
 											aria-expanded={isExpanded}
 											aria-controls={`application-details-${app.id}`}
 											aria-label={
-												isExpanded
-													? 'Collapse applicant details'
-													: 'Expand applicant details'
+												isExpanded ? t.collapseApplicant : t.expandApplicant
 											}
 											className="btn-ghost h-8 w-8 p-0 text-ink-muted hover:bg-gray-50"
 										>
@@ -228,7 +226,7 @@ export default function JobApplicants() {
 												<div className="flex items-center gap-2 text-ink-faint">
 													<CalendarDays size={16} aria-hidden="true" />
 													<p className="text-xs font-medium uppercase tracking-wide">
-														Submitted
+														{t.submitted}
 													</p>
 												</div>
 												<p className="mt-3 text-sm font-medium text-ink">
@@ -247,7 +245,7 @@ export default function JobApplicants() {
 												<div className="flex items-center gap-2 text-ink-faint">
 													<FileText size={16} aria-hidden="true" />
 													<p className="text-xs font-medium uppercase tracking-wide">
-														Resume
+														{t.resume}
 													</p>
 												</div>
 												{app.has_resume ? (
@@ -257,11 +255,11 @@ export default function JobApplicants() {
 														className="btn-outline mt-3 px-3 py-1.5 text-sm"
 													>
 														<Download size={16} aria-hidden="true" />
-														Download resume
+														{t.downloadResume}
 													</button>
 												) : (
 													<p className="mt-3 text-sm text-ink-muted">
-														No resume attached
+														{t.noResume}
 													</p>
 												)}
 											</section>
@@ -269,10 +267,10 @@ export default function JobApplicants() {
 
 										<section className="border-t border-line px-6 py-6 sm:px-8">
 											<p className="text-xs font-medium uppercase tracking-wide text-ink-faint">
-												Cover letter
+												{t.coverLetter}
 											</p>
 											<p className="mt-3 whitespace-pre-line text-sm leading-6 text-ink-muted">
-												{app.cover_letter || 'No cover letter was included.'}
+												{app.cover_letter || t.noCoverLetter}
 											</p>
 										</section>
 
@@ -281,7 +279,7 @@ export default function JobApplicants() {
 												className="text-sm font-medium text-ink-muted"
 												htmlFor={`status-${app.id}`}
 											>
-												Update hiring status
+												{t.updateHiringStatus}
 											</label>
 											<select
 												id={`status-${app.id}`}
@@ -293,7 +291,7 @@ export default function JobApplicants() {
 											>
 												{STATUS_OPTIONS.map((s) => (
 													<option key={s} value={s}>
-														{s[0].toUpperCase() + s.slice(1)}
+														{t[s]}
 													</option>
 												))}
 											</select>

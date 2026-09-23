@@ -4,8 +4,10 @@ import { api } from '../../../shared/api/client';
 import Spinner from '../../../shared/components/Spinner';
 import StatusTag from '../../../shared/components/StatusTag';
 import Pagination from '../../../shared/components/Pagination';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function CandidateDashboard() {
+	const { t } = useLanguage();
 	const [applications, setApplications] = useState([]);
 	const [meta, setMeta] = useState(null);
 	const [page, setPage] = useState(1);
@@ -33,7 +35,7 @@ export default function CandidateDashboard() {
 	}, [page]);
 
 	async function handleWithdraw(id) {
-		if (!confirm('Withdraw this application?')) return;
+		if (!confirm(t.withdrawConfirm)) return;
 		await api.delete(`/applications/${id}`);
 		setApplications((apps) => apps.filter((a) => a.id !== id));
 	}
@@ -46,16 +48,14 @@ export default function CandidateDashboard() {
 		<div>
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between mb-8">
 				<div>
-					<h1 className="font-display text-3xl">Your applications</h1>
-					<p className="text-ink-muted text-sm mt-1">
-						Track where things stand.
-					</p>
+					<h1 className="font-display text-3xl">{t.yourApplications}</h1>
+					<p className="text-ink-muted text-sm mt-1">{t.trackStatus}</p>
 				</div>
 				<Link
 					to="/profile/candidate"
 					className="text-sm text-amber-dark hover:underline"
 				>
-					Edit profile
+					{t.editProfile}
 				</Link>
 			</div>
 
@@ -67,9 +67,9 @@ export default function CandidateDashboard() {
 
 			{!loading && applications.length === 0 && (
 				<p className="text-ink-muted text-sm py-12 text-center">
-					No applications yet.{' '}
+					{t.noApplications}{' '}
 					<Link to="/" className="text-amber-dark hover:underline">
-						Browse open roles
+						{t.browseOpenRoles}
 					</Link>
 					.
 				</p>
@@ -111,7 +111,7 @@ export default function CandidateDashboard() {
 								}}
 								className="btn-ghost text-xs"
 							>
-								Withdraw
+								{t.withdraw}
 							</button>
 						</div>
 					</div>

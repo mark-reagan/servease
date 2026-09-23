@@ -166,6 +166,23 @@ class AuthController extends Controller
         ]);
     }
 
+    public function deleteAccount(Request $request)
+    {
+        $data = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'confirmation' => ['required', 'in:DELETE'],
+        ]);
+
+        $user = $request->user();
+
+        DB::transaction(function () use ($user) {
+            $user->tokens()->delete();
+            $user->delete();
+        });
+
+        return response()->json(['message' => 'Account deleted.']);
+    }
+
     public function me(Request $request)
     {
         return new UserResource($request->user()->load(['candidateProfile', 'companyProfile']));

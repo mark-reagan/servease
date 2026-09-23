@@ -66,7 +66,7 @@ function getPageTitle(pathname, pageTitles) {
 		'/saved-jobs': pageTitles.savedJobs,
 		'/profile/company': pageTitles.companyProfile,
 		'/profile/candidate': pageTitles.candidateProfile,
-		'/account-settings': 'Account settings',
+		'/account-settings': pageTitles.accountSettings,
 	};
 
 	if (exactTitles[pathname]) return exactTitles[pathname];

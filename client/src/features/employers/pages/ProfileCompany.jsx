@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { api, ApiError } from '../../../shared/api/client';
 import { useAuth } from '../../auth/context/AuthContext';
 import Spinner from '../../../shared/components/Spinner';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function ProfileCompany() {
 	const { user, refresh } = useAuth();
+	const { t } = useLanguage();
 	const [form, setForm] = useState(null);
 	const [logoFile, setLogoFile] = useState(null);
 	const [saving, setSaving] = useState(false);
@@ -44,12 +46,10 @@ export default function ProfileCompany() {
 		try {
 			await api.put('/profile/company', data);
 			await refresh();
-			setMessage('Company profile updated.');
+			setMessage(t.companyProfileUpdated);
 		} catch (err) {
 			setError(
-				err instanceof ApiError
-					? err.message
-					: 'Could not save your company profile.',
+				err instanceof ApiError ? err.message : t.couldNotSaveCompanyProfile,
 			);
 		} finally {
 			setSaving(false);
@@ -68,13 +68,13 @@ export default function ProfileCompany() {
 		<div className="max-w-2xl mx-auto">
 			<div className="flex flex-wrap items-start justify-between gap-4 mb-8">
 				<div>
-					<h1 className="font-display text-3xl mb-1">Company profile</h1>
+					<h1 className="font-display text-3xl mb-1">{t.companyProfile}</h1>
 					<p className="text-ink-muted text-sm">
-						Candidates see this on your job postings and company page.
+						{t.companyProfileDescription}
 					</p>
 				</div>
 				<Link to="/account-settings" className="btn-outline">
-					Account settings
+					{t.accountSettings}
 				</Link>
 			</div>
 
@@ -84,7 +84,7 @@ export default function ProfileCompany() {
 			<form onSubmit={handleSubmit} className="space-y-5">
 				<div>
 					<label className="field-label" htmlFor="company_name">
-						Company name
+						{t.companyName}
 					</label>
 					<input
 						id="company_name"
@@ -96,7 +96,7 @@ export default function ProfileCompany() {
 
 				<div>
 					<label className="field-label" htmlFor="description">
-						Description
+						{t.description}
 					</label>
 					<textarea
 						id="description"
@@ -110,7 +110,7 @@ export default function ProfileCompany() {
 				<div className="grid sm:grid-cols-2 gap-4">
 					<div>
 						<label className="field-label" htmlFor="website">
-							Website
+							{t.website}
 						</label>
 						<input
 							id="website"
@@ -122,7 +122,7 @@ export default function ProfileCompany() {
 					</div>
 					<div>
 						<label className="field-label" htmlFor="industry">
-							Industry
+							{t.industry}
 						</label>
 						<input
 							id="industry"
@@ -136,7 +136,7 @@ export default function ProfileCompany() {
 				<div className="grid sm:grid-cols-2 gap-4">
 					<div>
 						<label className="field-label" htmlFor="company_size">
-							Company size
+							{t.companySize}
 						</label>
 						<input
 							id="company_size"
@@ -148,7 +148,7 @@ export default function ProfileCompany() {
 					</div>
 					<div>
 						<label className="field-label" htmlFor="location">
-							Location
+							{t.location}
 						</label>
 						<input
 							id="location"
@@ -161,7 +161,7 @@ export default function ProfileCompany() {
 
 				<div>
 					<label className="field-label" htmlFor="logo">
-						Logo
+						{t.logo}
 					</label>
 					<input
 						id="logo"
@@ -173,7 +173,7 @@ export default function ProfileCompany() {
 				</div>
 
 				<button type="submit" className="btn-primary" disabled={saving}>
-					{saving ? 'Saving…' : 'Save company profile'}
+					{saving ? t.saving : t.saveCompanyProfile}
 				</button>
 			</form>
 		</div>

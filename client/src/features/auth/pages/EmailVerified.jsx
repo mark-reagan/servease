@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function EmailVerified() {
 	const [searchParams] = useSearchParams();
 	const { loginWithToken } = useAuth();
+	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const [state, setState] = useState('verifying');
 	const ran = useRef(false);
@@ -35,12 +37,10 @@ export default function EmailVerified() {
 	if (state === 'invalid') {
 		return (
 			<div className="max-w-sm mx-auto py-10 text-center">
-				<h1 className="font-display text-3xl mb-2">Verification failed</h1>
-				<p className="text-ink-muted text-sm mb-6">
-					This verification link is invalid or has expired.
-				</p>
+				<h1 className="font-display text-3xl mb-2">{t.verificationFailed}</h1>
+				<p className="text-ink-muted text-sm mb-6">{t.verificationInvalid}</p>
 				<Link to="/login" className="btn-primary inline-block">
-					Go to login
+					{t.goToLogin}
 				</Link>
 			</div>
 		);
@@ -48,8 +48,8 @@ export default function EmailVerified() {
 
 	return (
 		<div className="max-w-sm mx-auto py-10 text-center">
-			<h1 className="font-display text-3xl mb-2">Verifying your email…</h1>
-			<p className="text-ink-muted text-sm">One moment please.</p>
+			<h1 className="font-display text-3xl mb-2">{t.verifyingEmail}</h1>
+			<p className="text-ink-muted text-sm">{t.oneMoment}</p>
 		</div>
 	);
 }

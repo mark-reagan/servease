@@ -2,9 +2,11 @@ import { useState, useMemo } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../../../shared/api/client';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function ResetPassword() {
 	const { resetPassword } = useAuth();
+	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const [params] = useSearchParams();
 	const token = params.get('token') || '';
@@ -31,14 +33,10 @@ export default function ResetPassword() {
 				password: form.password,
 				password_confirmation: form.password_confirmation,
 			});
-			setMessage(res.message || 'Your password has been reset.');
+			setMessage(res.message || t.passwordReset);
 			setTimeout(() => navigate('/login'), 1500);
 		} catch (err) {
-			setError(
-				err instanceof ApiError
-					? err.message
-					: 'Could not reset your password.',
-			);
+			setError(err instanceof ApiError ? err.message : t.couldNotReset);
 		} finally {
 			setLoading(false);
 		}
@@ -47,12 +45,12 @@ export default function ResetPassword() {
 	if (!validRequest) {
 		return (
 			<div className="max-w-md mx-auto py-10">
-				<h1 className="font-display text-3xl mb-1">Invalid reset link</h1>
+				<h1 className="font-display text-3xl mb-1">{t.invalidResetLink}</h1>
 				<p className="text-ink-muted text-sm mb-8">
-					The reset link is missing required details. Please request a new one.
+					{t.invalidResetDescription}
 				</p>
 				<Link to="/forgot-password" className="btn-primary inline-block">
-					Request a new reset link
+					{t.requestNewResetLink}
 				</Link>
 			</div>
 		);
@@ -60,10 +58,8 @@ export default function ResetPassword() {
 
 	return (
 		<div className="max-w-md mx-auto py-10">
-			<h1 className="font-display text-3xl mb-1">Choose a new password</h1>
-			<p className="text-ink-muted text-sm mb-8">
-				Create a password with at least 8 characters.
-			</p>
+			<h1 className="font-display text-3xl mb-1">{t.chooseNewPassword}</h1>
+			<p className="text-ink-muted text-sm mb-8">{t.newPasswordDescription}</p>
 
 			{message && <p className="text-green-700 text-sm mb-4">{message}</p>}
 			{error && <p className="text-rust text-sm mb-4">{error}</p>}
@@ -71,7 +67,7 @@ export default function ResetPassword() {
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div>
 					<label className="field-label" htmlFor="password">
-						New password
+						{t.newPassword}
 					</label>
 					<input
 						id="password"
@@ -87,7 +83,7 @@ export default function ResetPassword() {
 
 				<div>
 					<label className="field-label" htmlFor="password_confirmation">
-						Confirm password
+						{t.confirmPassword}
 					</label>
 					<input
 						id="password_confirmation"
@@ -105,7 +101,7 @@ export default function ResetPassword() {
 				</div>
 
 				<button type="submit" className="btn-primary w-full" disabled={loading}>
-					{loading ? 'Resetting password…' : 'Reset password'}
+					{loading ? t.resettingPassword : t.resetPasswordButton}
 				</button>
 			</form>
 		</div>

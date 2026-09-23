@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api, ApiError } from '../../../shared/api/client';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function AccountSettings() {
-	const { user, refresh } = useAuth();
+	const { user, refresh, logout } = useAuth();
+	const { t } = useLanguage();
+	const navigate = useNavigate();
 	const [email, setEmail] = useState(user?.email || '');
 	const [currentPassword, setCurrentPassword] = useState('');
 	const [password, setPassword] = useState('');
@@ -11,6 +15,11 @@ export default function AccountSettings() {
 	const [saving, setSaving] = useState(false);
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState('');
+	const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+	const [deletePassword, setDeletePassword] = useState('');
+	const [deleteConfirmation, setDeleteConfirmation] = useState('');
+	const [deleting, setDeleting] = useState(false);
+	const [deleteError, setDeleteError] = useState('');
 
 	async function handleSubmit(event) {
 		event.preventDefault();
@@ -29,23 +38,40 @@ export default function AccountSettings() {
 			setCurrentPassword('');
 			setPassword('');
 			setPasswordConfirmation('');
-			setMessage(response.message || 'Account settings updated.');
+			setMessage(response.message || t.accountSettingsUpdated);
 		} catch (err) {
-			setError(
-				err instanceof ApiError
-					? err.message
-					: 'Could not update account settings.',
-			);
+			setError(err instanceof ApiError ? err.message : t.couldNotUpdateAccount);
 		} finally {
 			setSaving(false);
 		}
 	}
 
+	async function handleDeleteAccount(event) {
+		event.preventDefault();
+		setDeleting(true);
+		setDeleteError('');
+
+		try {
+			await api.delete('/account', {
+				current_password: deletePassword,
+				confirmation: deleteConfirmation,
+			});
+			await logout();
+			navigate('/login', { replace: true });
+		} catch (err) {
+			setDeleteError(
+				err instanceof ApiError ? err.message : t.couldNotDeleteAccount,
+			);
+		} finally {
+			setDeleting(false);
+		}
+	}
+
 	return (
 		<div className="max-w-2xl mx-auto">
-			<h1 className="font-display text-3xl mb-1">Account settings</h1>
+			<h1 className="font-display text-3xl mb-1">{t.accountSettings}</h1>
 			<p className="text-ink-muted text-sm mb-8">
-				Manage the email address and password used to sign in.
+				{t.accountSettingsDescription}
 			</p>
 
 			{message && <p className="text-teal text-sm mb-4">{message}</p>}
@@ -54,7 +80,7 @@ export default function AccountSettings() {
 			<form onSubmit={handleSubmit} className="space-y-5">
 				<div>
 					<label className="field-label" htmlFor="email">
-						Email address
+						{t.emailAddress}
 					</label>
 					<input
 						id="email"
@@ -70,7 +96,7 @@ export default function AccountSettings() {
 				<div className="border-t border-line pt-5 space-y-5">
 					<div>
 						<label className="field-label" htmlFor="current_password">
-							Current password
+							{t.currentPassword}
 						</label>
 						<input
 							id="current_password"
@@ -84,7 +110,7 @@ export default function AccountSettings() {
 					<div className="grid sm:grid-cols-2 gap-4">
 						<div>
 							<label className="field-label" htmlFor="password">
-								New password
+								{t.newPassword}
 							</label>
 							<input
 								id="password"
@@ -97,7 +123,7 @@ export default function AccountSettings() {
 						</div>
 						<div>
 							<label className="field-label" htmlFor="password_confirmation">
-								Confirm new password
+								{t.confirmNewPassword}
 							</label>
 							<input
 								id="password_confirmation"
@@ -114,9 +140,92 @@ export default function AccountSettings() {
 				</div>
 
 				<button type="submit" className="btn-primary" disabled={saving}>
-					{saving ? 'Saving...' : 'Save account settings'}
+					{saving ? t.saving : t.saveAccountSettings}
 				</button>
 			</form>
+
+			<section
+				className="mt-12 border border-rust bg-rust/5 p-5"
+				aria-labelledby="delete-account-heading"
+			>
+				<h2
+					id="delete-account-heading"
+					className="font-display text-xl text-rust-dark"
+				>
+					{t.deleteAccount}
+				</h2>
+				<p className="text-sm text-ink-muted mt-2">
+					{t.deleteAccountDescription}
+				</p>
+				{!showDeleteConfirmation ? (
+					<button
+						type="button"
+						className="btn mt-5 border border-rust bg-rust text-white hover:bg-rust-dark"
+						onClick={() => setShowDeleteConfirmation(true)}
+					>
+						{t.deleteMyAccount}
+					</button>
+				) : (
+					<form
+						onSubmit={handleDeleteAccount}
+						className="mt-5 space-y-4 border-t border-rust/30 pt-5"
+					>
+						<p className="text-sm font-medium text-rust-dark">
+							{t.finalDeleteConfirmation}
+						</p>
+						{deleteError && <p className="text-rust text-sm">{deleteError}</p>}
+						<div>
+							<label className="field-label" htmlFor="delete_confirmation">
+								{t.typeDelete}
+							</label>
+							<input
+								id="delete_confirmation"
+								className="field-input"
+								value={deleteConfirmation}
+								onChange={(event) => setDeleteConfirmation(event.target.value)}
+								autoComplete="off"
+								required
+							/>
+						</div>
+						<div>
+							<label className="field-label" htmlFor="delete_password">
+								{t.currentPassword}
+							</label>
+							<input
+								id="delete_password"
+								type="password"
+								className="field-input"
+								value={deletePassword}
+								onChange={(event) => setDeletePassword(event.target.value)}
+								autoComplete="current-password"
+								required
+							/>
+						</div>
+						<div className="flex flex-wrap gap-3">
+							<button
+								type="submit"
+								className="btn border border-rust bg-rust text-white hover:bg-rust-dark"
+								disabled={deleting || deleteConfirmation !== 'DELETE'}
+							>
+								{deleting ? t.deletingAccount : t.permanentlyDelete}
+							</button>
+							<button
+								type="button"
+								className="btn-outline"
+								disabled={deleting}
+								onClick={() => {
+									setShowDeleteConfirmation(false);
+									setDeletePassword('');
+									setDeleteConfirmation('');
+									setDeleteError('');
+								}}
+							>
+								Cancel
+							</button>
+						</div>
+					</form>
+				)}
+			</section>
 		</div>
 	);
 }

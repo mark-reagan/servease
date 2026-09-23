@@ -10,16 +10,16 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
-		<ErrorBoundary>
-			<BrowserRouter>
-				<ThemeProvider>
-					<LanguageProvider>
+		<BrowserRouter>
+			<ThemeProvider>
+				<LanguageProvider>
+					<ErrorBoundary>
 						<AuthProvider>
 							<App />
 						</AuthProvider>
-					</LanguageProvider>
-				</ThemeProvider>
-			</BrowserRouter>
-		</ErrorBoundary>
+					</ErrorBoundary>
+				</LanguageProvider>
+			</ThemeProvider>
+		</BrowserRouter>
 	</React.StrictMode>,
 );

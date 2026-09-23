@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../../../shared/api/client';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function ForgotPassword() {
 	const { forgotPassword } = useAuth();
+	const { t } = useLanguage();
 	const [email, setEmail] = useState('');
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState('');
@@ -17,11 +19,9 @@ export default function ForgotPassword() {
 		setMessage('');
 		try {
 			const res = await forgotPassword(email);
-			setMessage(res.message || 'We have emailed your password reset link.');
+			setMessage(res.message || t.resetEmailSent);
 		} catch (err) {
-			setError(
-				err instanceof ApiError ? err.message : 'Could not send reset email.',
-			);
+			setError(err instanceof ApiError ? err.message : t.couldNotSendReset);
 		} finally {
 			setLoading(false);
 		}
@@ -29,10 +29,8 @@ export default function ForgotPassword() {
 
 	return (
 		<div className="max-w-md mx-auto py-10">
-			<h1 className="font-display text-3xl mb-1">Reset your password</h1>
-			<p className="text-ink-muted text-sm mb-8">
-				Enter your email and we’ll send a secure reset link.
-			</p>
+			<h1 className="font-display text-3xl mb-1">{t.resetPassword}</h1>
+			<p className="text-ink-muted text-sm mb-8">{t.resetDescription}</p>
 
 			{message && <p className="text-green-700 text-sm mb-4">{message}</p>}
 			{error && <p className="text-rust text-sm mb-4">{error}</p>}
@@ -40,7 +38,7 @@ export default function ForgotPassword() {
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div>
 					<label className="field-label" htmlFor="email">
-						Email
+						{t.email}
 					</label>
 					<input
 						id="email"
@@ -53,14 +51,14 @@ export default function ForgotPassword() {
 				</div>
 
 				<button type="submit" className="btn-primary w-full" disabled={loading}>
-					{loading ? 'Sending link…' : 'Send reset link'}
+					{loading ? t.sendingLink : t.sendResetLink}
 				</button>
 			</form>
 
 			<p className="text-sm text-ink-muted mt-6">
-				Remembered it?{' '}
+				{t.rememberedIt}{' '}
 				<Link to="/login" className="text-amber-dark hover:underline">
-					Back to login
+					{t.backToLogin}
 				</Link>
 			</p>
 		</div>

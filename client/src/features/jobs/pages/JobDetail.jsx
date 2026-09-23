@@ -9,11 +9,13 @@ import {
 } from '../../../shared/lib/format';
 import Spinner from '../../../shared/components/Spinner';
 import StatusTag from '../../../shared/components/StatusTag';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 export default function JobDetail() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { user } = useAuth();
+	const { t } = useLanguage();
 
 	const [job, setJob] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -57,14 +59,12 @@ export default function JobDetail() {
 		if (resumeFile) data.append('resume', resumeFile);
 		try {
 			await api.post(`/jobs/${id}/apply`, data);
-			setApplyMessage(
-				'Application sent. The employer can now see it on their end.',
-			);
+			setApplyMessage(t.applicationSent);
 			setCoverLetter('');
 			setResumeFile(null);
 		} catch (err) {
 			if (err instanceof ApiError) setApplyError(err.message);
-			else setApplyError('Could not submit your application.');
+			else setApplyError(t.couldNotSubmitApplication);
 		} finally {
 			setApplying(false);
 		}
@@ -87,7 +87,7 @@ export default function JobDetail() {
 	if (loading) {
 		return (
 			<div className="py-24 flex justify-center">
-				<Spinner label="Opening posting…" />
+				<Spinner label={t.openingPosting} />
 			</div>
 		);
 	}
@@ -95,11 +95,9 @@ export default function JobDetail() {
 	if (!job) {
 		return (
 			<div className="py-24 text-center">
-				<p className="font-display text-2xl mb-2">
-					This posting isn't here anymore.
-				</p>
+				<p className="font-display text-2xl mb-2">{t.postingGone}</p>
 				<Link to="/" className="text-amber-dark hover:underline text-sm">
-					Back to all jobs
+					{t.backToJobs}
 				</Link>
 			</div>
 		);
@@ -117,7 +115,7 @@ export default function JobDetail() {
 				to="/"
 				className="text-sm text-ink-muted hover:text-ink transition-colors"
 			>
-				← All jobs
+				← {t.allJobs}
 			</Link>
 
 			<div className="panel mt-4 relative">
@@ -133,8 +131,24 @@ export default function JobDetail() {
 
 					<div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-ink-muted">
 						{job.location && <span>{job.location}</span>}
-						<span>{employmentLabel(job.employment_type)}</span>
-						<span>{workModeLabel(job.work_mode)}</span>
+						<span>
+							{t[
+								{
+									full_time: 'fullTime',
+									part_time: 'partTime',
+									contract: 'contract',
+									internship: 'internship',
+									temporary: 'temporary',
+								}[job.employment_type]
+							] || employmentLabel(job.employment_type)}
+						</span>
+						<span>
+							{t[
+								{ on_site: 'onSite', remote: 'remote', hybrid: 'hybrid' }[
+									job.work_mode
+								]
+							] || workModeLabel(job.work_mode)}
+						</span>
 						{salary && <span className="text-ink">{salary}</span>}
 					</div>
 				</div>
@@ -147,7 +161,7 @@ export default function JobDetail() {
 
 				<div className="p-8 pt-6 space-y-6">
 					<div>
-						<h2 className="font-display text-lg mb-2">About the role</h2>
+						<h2 className="font-display text-lg mb-2">{t.aboutRole}</h2>
 						<p className="text-sm text-ink-muted whitespace-pre-line leading-relaxed">
 							{job.description}
 						</p>
@@ -155,9 +169,7 @@ export default function JobDetail() {
 
 					{job.requirements && (
 						<div>
-							<h2 className="font-display text-lg mb-2">
-								What they're looking for
-							</h2>
+							<h2 className="font-display text-lg mb-2">{t.whatLookingFor}</h2>
 							<p className="text-sm text-ink-muted whitespace-pre-line leading-relaxed">
 								{job.requirements}
 							</p>
@@ -166,7 +178,7 @@ export default function JobDetail() {
 
 					{job.skills?.length > 0 && (
 						<div>
-							<h2 className="font-display text-lg mb-2">Skills</h2>
+							<h2 className="font-display text-lg mb-2">{t.skills}</h2>
 							<div className="flex flex-wrap gap-2">
 								{job.skills.map((skill) => (
 									<span
@@ -185,10 +197,10 @@ export default function JobDetail() {
 			{isOwner && (
 				<div className="mt-6 flex gap-3">
 					<Link to={`/jobs/${job.id}/applicants`} className="btn-outline">
-						View applicants
+						{t.viewApplicants}
 					</Link>
 					<Link to={`/jobs/${job.id}/edit`} className="btn-ghost">
-						Edit posting
+						{t.editPosting}
 					</Link>
 				</div>
 			)}
@@ -196,9 +208,9 @@ export default function JobDetail() {
 			{!isOwner && user?.role === 'candidate' && (
 				<div className="mt-8 panel p-6">
 					<div className="flex items-center justify-between mb-4">
-						<h2 className="font-display text-lg">Apply to this role</h2>
+						<h2 className="font-display text-lg">{t.applyRole}</h2>
 						<button onClick={handleSave} className="btn-ghost text-sm">
-							{saved ? 'Remove saved job' : 'Save job'}
+							{saved ? t.removeSavedJob : t.saveJob}
 						</button>
 					</div>
 
@@ -211,20 +223,20 @@ export default function JobDetail() {
 						<form onSubmit={handleApply} className="space-y-3">
 							<div>
 								<label className="field-label" htmlFor="cover_letter">
-									Cover letter (optional)
+									{t.coverLetterOptional}
 								</label>
 								<textarea
 									id="cover_letter"
 									rows={5}
 									className="field-input"
-									placeholder="Why this role, and why you."
+									placeholder={t.coverLetterPlaceholder}
 									value={coverLetter}
 									onChange={(e) => setCoverLetter(e.target.value)}
 								/>
 							</div>
 							<div>
 								<label className="field-label" htmlFor="resume">
-									Resume (PDF or Word, optional)
+									{t.resumeOptional}
 								</label>
 								<input
 									id="resume"
@@ -238,14 +250,13 @@ export default function JobDetail() {
 								) : (
 									user?.candidate_profile?.resume_path && (
 										<p className="text-xs text-ink-faint mt-1">
-											The resume on your profile will be used if you don't
-											attach one.
+											{t.profileResumeUsed}
 										</p>
 									)
 								)}
 							</div>
 							<button type="submit" className="btn-primary" disabled={applying}>
-								{applying ? 'Sending…' : 'Submit application'}
+								{applying ? t.sending : t.submitApplication}
 							</button>
 						</form>
 					)}
@@ -254,11 +265,9 @@ export default function JobDetail() {
 
 			{!user && (
 				<div className="mt-8 panel p-6 text-center">
-					<p className="text-sm text-ink-muted mb-3">
-						Log in as a candidate to apply.
-					</p>
+					<p className="text-sm text-ink-muted mb-3">{t.loginToApply}</p>
 					<button onClick={() => navigate('/login')} className="btn-primary">
-						Log in
+						{t.logIn}
 					</button>
 				</div>
 			)}
