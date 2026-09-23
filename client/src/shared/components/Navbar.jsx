@@ -1,8 +1,9 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, Moon, Sun, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../features/auth/context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import logo from '../../assets/logo.svg';
 
 function navLinkClass({ isActive }) {
@@ -24,6 +25,7 @@ function ctaNavLinkClass({ isActive }) {
 export default function Navbar() {
 	const { user, logout } = useAuth();
 	const { language, setLanguage, t } = useLanguage();
+	const { theme, toggleTheme } = useTheme();
 	const navigate = useNavigate();
 	const isAuthenticated = Boolean(user);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,6 +40,21 @@ export default function Navbar() {
 	function openLogoutModal() {
 		setIsMenuOpen(false);
 		setIsLogoutModalOpen(true);
+	}
+
+	function themeToggle(className = '') {
+		return (
+			<button
+				type="button"
+				onClick={toggleTheme}
+				className={`inline-flex items-center justify-center p-1.5 text-ink-muted hover:text-ink transition-colors ${className}`}
+				aria-label={
+					theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+				}
+			>
+				{theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+			</button>
+		);
 	}
 
 	function languageSelector(className = '') {
@@ -73,6 +90,7 @@ export default function Navbar() {
 					<nav
 						className={`${isAuthenticated ? 'hidden min-[840px]:flex' : 'hidden sm:flex'} items-center gap-6 text-sm`}
 					>
+						{themeToggle()}
 						{languageSelector()}
 						<NavLink to="/" className={navLinkClass} end>
 							{t.findWork}
@@ -128,15 +146,20 @@ export default function Navbar() {
 						)}
 					</nav>
 
-					<button
-						type="button"
-						className={`${isAuthenticated ? 'min-[840px]:hidden' : 'sm:hidden'} text-ink p-2`}
-						onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-						aria-label={isMenuOpen ? t.closeMenu : t.openMenu}
-						aria-expanded={isMenuOpen}
+					<div
+						className={`${isAuthenticated ? 'min-[840px]:hidden' : 'sm:hidden'} flex items-center gap-2`}
 					>
-						{isMenuOpen ? <X size={22} /> : <Menu size={22} />}
-					</button>
+						{themeToggle()}
+						<button
+							type="button"
+							className="text-ink p-2"
+							onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+							aria-label={isMenuOpen ? t.closeMenu : t.openMenu}
+							aria-expanded={isMenuOpen}
+						>
+							{isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+						</button>
+					</div>
 				</div>
 
 				<nav
@@ -148,6 +171,7 @@ export default function Navbar() {
 					aria-hidden={!isMenuOpen}
 				>
 					<div className="border-t border-line px-5 py-4 space-y-3 text-sm">
+						{themeToggle()}
 						{languageSelector('block')}
 						<NavLink
 							to="/"

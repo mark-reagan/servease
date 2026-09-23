@@ -2,9 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--color-paper: 246 244 239;
+	--color-panel: 255 253 249;
+	--color-ink: 30 36 51;
+	--color-ink-muted: 91 100 114;
+	--color-ink-faint: 138 147 163;
+	--color-line: 218 213 200;
+}
+
+.dark {
+	--color-paper: 20 24 31;
+	--color-panel: 28 34 44;
+	--color-ink: 237 239 243;
+	--color-ink-muted: 154 163 178;
+	--color-ink-faint: 107 114 128;
+	--color-line: 46 53 66;
+}
+
 @layer base {
 	html {
 		@apply scroll-smooth;
+	}
+
+	body {
+		@apply bg-paper text-ink transition-colors duration-200;
 	}
 
 	body {
