@@ -49,4 +49,24 @@ class EmailVerificationController extends Controller
 
         return response()->json(['message' => 'Verification link sent.']);
     }
+
+    /**
+     * Resend the verification notification by email, for use before the user
+     * has an access token (e.g. right after registering).
+     *
+     * @unauthenticated
+     */
+    public function resendByEmail(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->input('email'))->first();
+
+        // Always return a generic response so the endpoint can't be used to enumerate accounts.
+        if ($user && ! $user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+        }
+
+        return response()->json(['message' => 'If that account exists and is unverified, a new link has been sent.']);
+    }
 }

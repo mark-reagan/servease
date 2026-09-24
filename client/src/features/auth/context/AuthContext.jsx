@@ -46,6 +46,10 @@ export function AuthProvider({ children }) {
 		return res;
 	}
 
+	async function resendVerificationEmail(email) {
+		return api.post('/email/verification-notification/resend', { email });
+	}
+
 	async function loginWithToken(token) {
 		localStorage.setItem('token', token);
 		const me = await api.get('/me');
@@ -89,6 +93,7 @@ export function AuthProvider({ children }) {
 				loading,
 				login,
 				register,
+				resendVerificationEmail,
 				loginWithToken,
 				logout,
 				forgotPassword,

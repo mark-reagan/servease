@@ -28,6 +28,9 @@ Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 've
     ->middleware('signed')
     ->name('verification.verify');
 
+Route::post('/email/verification-notification/resend', [EmailVerificationController::class, 'resendByEmail'])
+    ->middleware('throttle:verification-notification');
+
 Route::apiResource('jobs', JobController::class)->only(['index', 'show']);
 Route::get('/companies/{slug}', [CompanyController::class, 'show']);
 

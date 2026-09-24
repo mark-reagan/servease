@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../../../shared/api/client';
 import { useLanguage } from '../../../shared/context/LanguageContext';
 
+const RESEND_COOLDOWN_SECONDS = 60;
+
 export default function Register() {
-	const { register } = useAuth();
+	const { register, resendVerificationEmail } = useAuth();
 	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -22,6 +24,17 @@ export default function Register() {
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [showVerifyModal, setShowVerifyModal] = useState(false);
+	const [resending, setResending] = useState(false);
+	const [resendMessage, setResendMessage] = useState('');
+	const [resendCooldown, setResendCooldown] = useState(0);
+
+	useEffect(() => {
+		if (resendCooldown <= 0) return;
+		const timer = setInterval(() => {
+			setResendCooldown((s) => Math.max(0, s - 1));
+		}, 1000);
+		return () => clearInterval(timer);
+	}, [resendCooldown]);
 
 	function update(key, value) {
 		setForm((f) => ({ ...f, [key]: value }));
@@ -35,6 +48,7 @@ export default function Register() {
 		try {
 			await register(form);
 			setShowVerifyModal(true);
+			setResendCooldown(RESEND_COOLDOWN_SECONDS);
 		} catch (err) {
 			if (err instanceof ApiError) {
 				setErrors(err.errors || {});
@@ -47,6 +61,22 @@ export default function Register() {
 			setLoading(false);
 		}
 	}
+
+	async function handleResend() {
+		if (resending || resendCooldown > 0) return;
+		setResending(true);
+		setResendMessage('');
+		try {
+			await resendVerificationEmail(form.email);
+			setResendMessage(t.verificationResent);
+			setResendCooldown(RESEND_COOLDOWN_SECONDS);
+		} catch {
+			setResendMessage(t.couldNotResendVerification);
+		} finally {
+			setResending(false);
+		}
+	}
+
 
 	return (
 		<div className="max-w-sm mx-auto py-10">
@@ -176,6 +206,24 @@ export default function Register() {
 							<strong className="text-ink">{form.email}</strong>. Please verify
 							{t.verifyBeforeLogin}
 						</p>
+
+						<p className="text-xs text-ink-muted mb-2">{t.didntGetEmail}</p>
+						<button
+							type="button"
+							className="btn-outline w-full mb-2 disabled:opacity-50 disabled:cursor-not-allowed"
+							onClick={handleResend}
+							disabled={resending || resendCooldown > 0}
+						>
+							{resending
+								? t.resendingEmail
+								: resendCooldown > 0
+									? t.resendAvailableIn.replace('{seconds}', resendCooldown)
+									: t.resendVerificationEmail}
+						</button>
+						{resendMessage && (
+							<p className="text-xs text-ink-muted mb-4">{resendMessage}</p>
+						)}
+
 						<button
 							type="button"
 							className="btn-primary w-full"
