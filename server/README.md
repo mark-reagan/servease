@@ -6,7 +6,7 @@ access, job management, profiles, applications, and saved jobs.
 
 ## Requirements
 
-- PHP 8.3 or later
+- PHP 8.4 or later
 - Composer
 - SQLite, MySQL, or PostgreSQL
 
