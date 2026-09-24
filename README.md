@@ -1,157 +1,105 @@
 # Servease
 
-A job hunting platform that connects job seekers with employers. Servease helps people find local opportunities and helps businesses find qualified candidates.
-
-## Overview
-
-Servease is a two-sided job board application with distinct experiences for:
-
-- **Job Seekers (Candidates)**: Browse jobs, save favorites, apply with cover letters, and manage application status
-- **Employers**: Post jobs, manage applications, and review candidates
+Servease is a two-sided job board for connecting local job seekers with employers in Quezon, Palawan.
 
 ## Features
 
-### For Job Seekers
-- Browse and search job listings with filters (keyword, location, employment type, work mode)
-- View detailed job information including company profile
-- Save jobs to a personal list for later review
-- Apply to jobs with cover letter and resume
-- Track application status and history
-- Create and manage a candidate profile with skills, experience, and portfolio links
-
-### For Employers
-- Create and manage a company profile
-- Post new job openings with detailed requirements
-- Edit or remove posted jobs
-- View all applications for posted jobs
-- Review candidate profiles and update application status
-- Add notes to applications
-
-### For All Users
-- User registration and authentication
-- Password reset functionality
-- Role-based dashboards
-- Responsive design for desktop and mobile
+- Browse, search, and filter job listings by keyword, location, employment type, and work mode.
+- View job and company details, save jobs, submit applications with a cover letter and resume, and track application status.
+- Maintain candidate profiles with skills, experience, and portfolio links.
+- Create company profiles, post and manage job openings, review applicants, and update application statuses.
+- Register and sign in with role-based access, email verification, password reset, and account settings.
+- Responsive interface with English/Filipino language support and light/dark themes.
 
 ## Tech Stack
 
-### Backend
-- **Framework**: Laravel 13 (PHP 8.3+)
-- **Authentication**: Laravel Sanctum
-- **Database**: SQLite (default), supports MySQL/PostgreSQL
-- **API Documentation**: Scribe
-
-### Frontend
-- **Framework**: React 18
-- **Routing**: React Router DOM
-- **Styling**: Tailwind CSS
-- **Build Tool**: Vite
-- **Icons**: Lucide React
+- **Frontend:** React 18, React Router, Vite, Tailwind CSS, Lucide React
+- **Backend:** Laravel 13, PHP 8.3+, Laravel Sanctum, Scribe
+- **Database:** SQLite by default; MySQL and PostgreSQL are supported by Laravel
 
 ## Project Structure
 
-```
-unpaid-proj-ken-bonghanoy/
-├── server/                 # Laravel backend API
-│   ├── app/
-│   │   ├── Models/        # Database models
-│   │   └── Http/
-│   │       ├── Controllers/ # API controllers
-│   │       └── Resources/   # API resource transformations
-│   ├── routes/api.php     # API routes
-│   └── database/
-├── client/                # React frontend
-│   ├── src/
-│   │   ├── app/          # App routing and layout
-│   │   ├── features/     # Feature-specific code
-│   │   │   ├── auth/     # Authentication
-│   │   │   ├── candidates/ # Candidate features
-│   │   │   ├── employers/  # Employer features
-│   │   │   └── jobs/       # Job browsing and management
-│   │   └── shared/       # Shared components
-│   └── public/
+```text
+client/       React frontend, routes, feature pages, and shared UI
+server/       Laravel API, models, migrations, and tests
 ```
 
-## API Documentation
+See [client/README.md](client/README.md) for frontend details and
+[server/README.md](server/README.md) for the API and database details.
 
-After starting the backend server, interactive API documentation is available at:
-- `/docs` - Interactive HTML documentation
-- `/api/v1` - API endpoints root
+## Requirements
 
-## Getting Started
-
-### Prerequisites
-- PHP 8.3+
+- PHP 8.3 or later
 - Composer
-- Node.js 18+
-- SQLite (or MySQL/PostgreSQL)
+- Node.js 18 or later
+- SQLite, MySQL, or PostgreSQL
 
-### Installation
+## Setup
 
-1. Clone the repository
-2. Install backend dependencies:
-   ```bash
-   cd server
-   composer install
-   ```
-3. Set up environment:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   php artisan migrate
-   ```
-4. Install frontend dependencies:
-   ```bash
-   cd ../client
-   npm install
-   ```
-5. Start the development servers:
-   ```bash
-   # Backend
-   cd server
-   php artisan serve
+Install and configure the backend:
 
-   # Frontend (in a new terminal)
-   cd client
-   npm run dev
-   ```
+```bash
+cd server
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+```
 
-The application will be available at `http://localhost:5173` (or the Vite port shown in output).
+SQLite is the default database. Create `database/database.sqlite` first if it
+does not already exist. MySQL and PostgreSQL can be configured through the
+database variables in `server/.env`.
 
-## API Endpoints
+Configure `VITE_API_URL` in `client/.env` when the API is not available at its
+default local URL, `http://localhost:8000/api/v1`. Then install the frontend
+dependencies:
 
-### Public
-- `POST /api/v1/register` - Register new user
-- `POST /api/v1/login` - Login
-- `POST /api/v1/forgot-password` - Request password reset
-- `POST /api/v1/reset-password` - Reset password
-- `GET /api/v1/jobs` - List jobs (paginated)
-- `GET /api/v1/jobs/{id}` - Get job details
-- `GET /api/v1/companies/{slug}` - Get company profile
+```bash
+cd ../client
+npm install
+```
 
-### Authenticated (Candidate)
-- `POST /api/v1/logout` - Logout
-- `GET /api/v1/me` - Get current user
-- `PUT /api/v1/profile/candidate` - Update candidate profile
-- `POST /api/v1/jobs/{id}/apply` - Apply to job
-- `GET /api/v1/applications` - Get my applications
-- `DELETE /api/v1/applications/{id}` - Withdraw application
-- `GET /api/v1/saved-jobs` - Get saved jobs
-- `POST /api/v1/jobs/{id}/save` - Save job
-- `DELETE /api/v1/jobs/{id}/save` - Remove saved job
+Start the backend and frontend in separate terminals:
 
-### Authenticated (Employer)
-- `PUT /api/v1/profile/company` - Update company profile
-- `GET /api/v1/my-jobs` - Get my posted jobs
-- `POST /api/v1/jobs` - Create job
-- `PUT /api/v1/jobs/{id}` - Update job
-- `DELETE /api/v1/jobs/{id}` - Delete job
-- `GET /api/v1/jobs/{id}/applications` - Get job applicants
-- `PATCH /api/v1/applications/{id}` - Update application status
+```bash
+# Terminal 1
+cd server
+php artisan serve
 
-## Local Focus
+# Terminal 2
+cd client
+npm run dev
+```
 
-Servease was built with a focus on serving the Quezon, Palawan community, connecting local job seekers with local employers.
+The frontend is available at `http://localhost:5173` by default. The backend is available at `http://localhost:8000`.
+
+The API documentation is available at `http://localhost:8000/docs` after the
+backend starts.
+
+## Useful Commands
+
+```bash
+# Client
+cd client
+npm run lint
+npm run build
+
+# Server
+cd server
+php artisan test
+# or: composer test
+```
+
+## API
+
+All API routes are versioned under `/api/v1` and return JSON responses with a `message` field for errors. Candidate and employer routes require an authenticated, verified account.
+
+Interactive API documentation is available at `/docs` after starting the backend. The main API areas are:
+
+- **Public:** registration, login, password reset, job listings, job details, and company profiles
+- **Account:** logout, current user, account updates/deletion, email verification, and resume downloads
+- **Candidates:** candidate profile, applications, saved jobs, and application withdrawal
+- **Employers:** company profile, job management, applicant lists, and application status updates
 
 ## License
 
