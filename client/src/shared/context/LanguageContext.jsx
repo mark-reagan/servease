@@ -49,7 +49,12 @@ const translations = {
 		resendingEmail: 'Resending...',
 		resendAvailableIn: 'You can resend in {seconds}s',
 		verificationResent: 'Verification link sent again.',
-		couldNotResendVerification: 'Could not resend the verification email. Please try again later.',
+		couldNotResendVerification:
+			'Could not resend the verification email. Please try again later.',
+		verifyYourEmail: 'Verify your email',
+		unverifiedLoginDescription:
+			"Your email address hasn't been verified yet. Please check your inbox, or resend the link below.",
+		close: 'Close',
 		resetPassword: 'Reset your password',
 		resetDescription: "Enter your email and we'll send a secure reset link.",
 		sendingLink: 'Sending link...',
@@ -324,6 +329,10 @@ const translations = {
 		verificationResent: 'Naipadala ulit ang verification link.',
 		couldNotResendVerification:
 			'Hindi maipadala ulit ang verification email. Subukan ulit mamaya.',
+		verifyYourEmail: 'I-verify ang iyong email',
+		unverifiedLoginDescription:
+			'Hindi pa na-verify ang iyong email. Pakisuri ang iyong inbox, o ipadala ulit ang link sa ibaba.',
+		close: 'Isara',
 		resetPassword: 'I-reset ang iyong password',
 		resetDescription:
 			'Ilagay ang iyong email at magpapadala kami ng secure na reset link.',

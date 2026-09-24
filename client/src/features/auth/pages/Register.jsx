@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../../../shared/api/client';
 import { useLanguage } from '../../../shared/context/LanguageContext';
+import { useResendCooldown } from '../../../shared/lib/useResendCooldown';
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
@@ -26,15 +27,10 @@ export default function Register() {
 	const [showVerifyModal, setShowVerifyModal] = useState(false);
 	const [resending, setResending] = useState(false);
 	const [resendMessage, setResendMessage] = useState('');
-	const [resendCooldown, setResendCooldown] = useState(0);
-
-	useEffect(() => {
-		if (resendCooldown <= 0) return;
-		const timer = setInterval(() => {
-			setResendCooldown((s) => Math.max(0, s - 1));
-		}, 1000);
-		return () => clearInterval(timer);
-	}, [resendCooldown]);
+	const [resendCooldown, startResendCooldown] = useResendCooldown(
+		form.email,
+		RESEND_COOLDOWN_SECONDS,
+	);
 
 	function update(key, value) {
 		setForm((f) => ({ ...f, [key]: value }));
@@ -48,7 +44,7 @@ export default function Register() {
 		try {
 			await register(form);
 			setShowVerifyModal(true);
-			setResendCooldown(RESEND_COOLDOWN_SECONDS);
+			startResendCooldown();
 		} catch (err) {
 			if (err instanceof ApiError) {
 				setErrors(err.errors || {});
@@ -69,14 +65,13 @@ export default function Register() {
 		try {
 			await resendVerificationEmail(form.email);
 			setResendMessage(t.verificationResent);
-			setResendCooldown(RESEND_COOLDOWN_SECONDS);
+			startResendCooldown();
 		} catch {
 			setResendMessage(t.couldNotResendVerification);
 		} finally {
 			setResending(false);
 		}
 	}
-
 
 	return (
 		<div className="max-w-sm mx-auto py-10">
