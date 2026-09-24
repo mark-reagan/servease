@@ -20,7 +20,7 @@ COPY . .
 RUN composer dump-autoload --optimize --no-dev
 
 ## --- Application image -----------------------------------------------------
-FROM php:8.3-fpm-alpine AS app
+FROM php:8.4-fpm-alpine AS app
 
 RUN apk add --no-cache \
         nginx \
