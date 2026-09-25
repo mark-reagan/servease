@@ -10,7 +10,7 @@ const EMPTY = {
 	work_mode: 'on_site',
 	salary_min: '',
 	salary_max: '',
-	salary_currency: 'USD',
+	salary_currency: 'PHP',
 	skills: '',
 	status: 'open',
 };
