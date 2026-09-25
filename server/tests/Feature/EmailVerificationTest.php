@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\CandidateProfile;
 use App\Models\CompanyProfile;
 use App\Models\User;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Notifications\QueuedVerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
@@ -31,7 +31,7 @@ class EmailVerificationTest extends TestCase
 
         $user = User::where('email', 'jane@example.com')->firstOrFail();
 
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Notification::assertSentTo($user, QueuedVerifyEmail::class);
     }
 
     public function test_unverified_user_cannot_log_in(): void
@@ -112,7 +112,7 @@ class EmailVerificationTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('message', 'Verification link sent.');
 
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Notification::assertSentTo($user, QueuedVerifyEmail::class);
     }
 
     public function test_already_verified_user_does_not_receive_a_duplicate_email(): void

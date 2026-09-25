@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -51,7 +52,11 @@ class AuthController extends Controller
             return $user;
         });
 
-        $user->sendEmailVerificationNotification();
+        try {
+            $user->sendEmailVerificationNotification();
+        } catch (\Throwable $e) {
+            Log::error('Failed to send verification email during registration.', ['user_id' => $user->id, 'exception' => $e]);
+        }
 
         return response()->json([
             'message' => 'Registration successful. Please check your email to verify your account before logging in.',
@@ -155,7 +160,11 @@ class AuthController extends Controller
         $user->save();
 
         if ($user->wasChanged('email')) {
-            $user->sendEmailVerificationNotification();
+            try {
+                $user->sendEmailVerificationNotification();
+            } catch (\Throwable $e) {
+                Log::error('Failed to send verification email after account update.', ['user_id' => $user->id, 'exception' => $e]);
+            }
         }
 
         return response()->json([

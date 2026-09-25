@@ -1,1 +1,0 @@
-import{u as s,j as e,L as a}from"./index-Cou1SJIG.js";function r(){const{t}=s();return e.jsxs("div",{className:"py-24 text-center",children:[e.jsx("p",{className:"font-display text-2xl mb-2",children:t.nothingHere}),e.jsx(a,{to:"/",className:"text-amber-dark hover:underline text-sm",children:t.backToJobs})]})}export{r as default};

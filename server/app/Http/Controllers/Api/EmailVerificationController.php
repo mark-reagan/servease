@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmailVerificationController extends Controller
 {
@@ -45,7 +46,11 @@ class EmailVerificationController extends Controller
             return response()->json(['message' => 'Email already verified.']);
         }
 
-        $user->sendEmailVerificationNotification();
+        try {
+            $user->sendEmailVerificationNotification();
+        } catch (\Throwable $e) {
+            Log::error('Failed to resend verification email.', ['user_id' => $user->id, 'exception' => $e]);
+        }
 
         return response()->json(['message' => 'Verification link sent.']);
     }
@@ -64,7 +69,11 @@ class EmailVerificationController extends Controller
 
         // Always return a generic response so the endpoint can't be used to enumerate accounts.
         if ($user && ! $user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
+            try {
+                $user->sendEmailVerificationNotification();
+            } catch (\Throwable $e) {
+                Log::error('Failed to resend verification email.', ['user_id' => $user->id, 'exception' => $e]);
+            }
         }
 
         return response()->json(['message' => 'If that account exists and is unverified, a new link has been sent.']);
