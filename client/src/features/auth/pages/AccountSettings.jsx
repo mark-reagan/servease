@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api, ApiError } from '../../../shared/api/client';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../../../shared/context/LanguageContext';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function AccountSettings() {
 	const { user, refresh, logout } = useAuth();
@@ -20,6 +21,10 @@ export default function AccountSettings() {
 	const [deleteConfirmation, setDeleteConfirmation] = useState('');
 	const [deleting, setDeleting] = useState(false);
 	const [deleteError, setDeleteError] = useState('');
+	const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+	const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+	const [showDeletePassword, setShowDeletePassword] = useState(false);
 
 	async function handleSubmit(event) {
 		event.preventDefault();
@@ -98,43 +103,94 @@ export default function AccountSettings() {
 						<label className="field-label" htmlFor="current_password">
 							{t.currentPassword}
 						</label>
-						<input
-							id="current_password"
-							type="password"
-							autoComplete="current-password"
-							className="field-input"
-							value={currentPassword}
-							onChange={(event) => setCurrentPassword(event.target.value)}
-						/>
+						<div className="relative">
+							<input
+								id="current_password"
+								type={showCurrentPassword ? 'text' : 'password'}
+								autoComplete="current-password"
+								className="field-input pr-10"
+								value={currentPassword}
+								onChange={(event) => setCurrentPassword(event.target.value)}
+							/>
+							<button
+								type="button"
+								className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
+								onClick={() => setShowCurrentPassword((visible) => !visible)}
+								aria-label={
+									showCurrentPassword ? 'Hide current password' : 'Show current password'
+								}
+								title={
+									showCurrentPassword ? 'Hide current password' : 'Show current password'
+								}
+							>
+								{showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+							</button>
+						</div>
 					</div>
 					<div className="grid sm:grid-cols-2 gap-4">
 						<div>
 							<label className="field-label" htmlFor="password">
 								{t.newPassword}
 							</label>
-							<input
-								id="password"
-								type="password"
-								autoComplete="new-password"
-								className="field-input"
-								value={password}
-								onChange={(event) => setPassword(event.target.value)}
-							/>
+							<div className="relative">
+								<input
+									id="password"
+									type={showPassword ? 'text' : 'password'}
+									autoComplete="new-password"
+									className="field-input pr-10"
+									value={password}
+									onChange={(event) => setPassword(event.target.value)}
+								/>
+								<button
+									type="button"
+									className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
+									onClick={() => setShowPassword((visible) => !visible)}
+									aria-label={showPassword ? 'Hide password' : 'Show password'}
+									title={showPassword ? 'Hide password' : 'Show password'}
+								>
+									{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+								</button>
+							</div>
 						</div>
 						<div>
 							<label className="field-label" htmlFor="password_confirmation">
 								{t.confirmNewPassword}
 							</label>
-							<input
-								id="password_confirmation"
-								type="password"
-								autoComplete="new-password"
-								className="field-input"
-								value={passwordConfirmation}
-								onChange={(event) =>
-									setPasswordConfirmation(event.target.value)
-								}
-							/>
+							<div className="relative">
+								<input
+									id="password_confirmation"
+									type={showPasswordConfirmation ? 'text' : 'password'}
+									autoComplete="new-password"
+									className="field-input pr-10"
+									value={passwordConfirmation}
+									onChange={(event) =>
+										setPasswordConfirmation(event.target.value)
+									}
+								/>
+								<button
+									type="button"
+									className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
+									onClick={() =>
+										setShowPasswordConfirmation((visible) => !visible)
+									}
+									aria-label={
+										showPasswordConfirmation
+											? 'Hide password confirmation'
+											: 'Show password confirmation'
+									}
+									title={
+										showPasswordConfirmation
+											? 'Hide password confirmation'
+											: 'Show password confirmation'
+									}
+								>
+									{showPasswordConfirmation ? (
+										<EyeOff size={18} />
+									) : (
+										<Eye size={18} />
+									)}
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -191,15 +247,34 @@ export default function AccountSettings() {
 							<label className="field-label" htmlFor="delete_password">
 								{t.currentPassword}
 							</label>
-							<input
-								id="delete_password"
-								type="password"
-								className="field-input"
-								value={deletePassword}
-								onChange={(event) => setDeletePassword(event.target.value)}
-								autoComplete="current-password"
-								required
-							/>
+							<div className="relative">
+								<input
+									id="delete_password"
+									type={showDeletePassword ? 'text' : 'password'}
+									className="field-input pr-10"
+									value={deletePassword}
+									onChange={(event) => setDeletePassword(event.target.value)}
+									autoComplete="current-password"
+									required
+								/>
+								<button
+									type="button"
+									className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
+									onClick={() => setShowDeletePassword((visible) => !visible)}
+									aria-label={
+										showDeletePassword
+											? 'Hide delete password'
+											: 'Show delete password'
+									}
+									title={
+										showDeletePassword
+											? 'Hide delete password'
+											: 'Show delete password'
+									}
+								>
+									{showDeletePassword ? <EyeOff size={18} /> : <Eye size={18} />}
+								</button>
+							</div>
 						</div>
 						<div className="flex flex-wrap gap-3">
 							<button

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../../../shared/api/client';
 import { useLanguage } from '../../../shared/context/LanguageContext';
 import { useResendCooldown } from '../../../shared/lib/useResendCooldown';
+import { Eye, EyeOff } from 'lucide-react';
 
 const RESEND_COOLDOWN_SECONDS = 60;
 const UNVERIFIED_MESSAGE =
@@ -17,6 +18,7 @@ export default function Login() {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [showVerifyModal, setShowVerifyModal] = useState(false);
@@ -85,14 +87,25 @@ export default function Login() {
 					<label className="field-label" htmlFor="password">
 						{t.password}
 					</label>
-					<input
-						id="password"
-						type="password"
-						required
-						className="field-input"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
+					<div className="relative">
+						<input
+							id="password"
+							type={showPassword ? 'text' : 'password'}
+							required
+							className="field-input pr-10"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+						/>
+						<button
+							type="button"
+							className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
+							onClick={() => setShowPassword((visible) => !visible)}
+							aria-label={showPassword ? 'Hide password' : 'Show password'}
+							title={showPassword ? 'Hide password' : 'Show password'}
+						>
+							{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+						</button>
+					</div>
 				</div>
 				<button type="submit" className="btn-primary w-full" disabled={loading}>
 					{loading ? t.loggingIn : t.logIn}
