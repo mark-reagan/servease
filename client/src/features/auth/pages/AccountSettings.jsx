@@ -23,7 +23,8 @@ export default function AccountSettings() {
 	const [deleteError, setDeleteError] = useState('');
 	const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
-	const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+	const [showPasswordConfirmation, setShowPasswordConfirmation] =
+		useState(false);
 	const [showDeletePassword, setShowDeletePassword] = useState(false);
 
 	async function handleSubmit(event) {
@@ -117,10 +118,14 @@ export default function AccountSettings() {
 								className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
 								onClick={() => setShowCurrentPassword((visible) => !visible)}
 								aria-label={
-									showCurrentPassword ? 'Hide current password' : 'Show current password'
+									showCurrentPassword
+										? 'Hide current password'
+										: 'Show current password'
 								}
 								title={
-									showCurrentPassword ? 'Hide current password' : 'Show current password'
+									showCurrentPassword
+										? 'Hide current password'
+										: 'Show current password'
 								}
 							>
 								{showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -272,7 +277,11 @@ export default function AccountSettings() {
 											: 'Show delete password'
 									}
 								>
-									{showDeletePassword ? <EyeOff size={18} /> : <Eye size={18} />}
+									{showDeletePassword ? (
+										<EyeOff size={18} />
+									) : (
+										<Eye size={18} />
+									)}
 								</button>
 							</div>
 						</div>

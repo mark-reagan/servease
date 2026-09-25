@@ -29,7 +29,8 @@ export default function Register() {
 	const [resending, setResending] = useState(false);
 	const [resendMessage, setResendMessage] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
-	const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+	const [showPasswordConfirmation, setShowPasswordConfirmation] =
+		useState(false);
 	const [resendCooldown, startResendCooldown] = useResendCooldown(
 		form.email,
 		RESEND_COOLDOWN_SECONDS,
@@ -196,9 +197,7 @@ export default function Register() {
 						<button
 							type="button"
 							className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
-							onClick={() =>
-								setShowPasswordConfirmation((visible) => !visible)
-							}
+							onClick={() => setShowPasswordConfirmation((visible) => !visible)}
 							aria-label={
 								showPasswordConfirmation
 									? 'Hide password confirmation'
