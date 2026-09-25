@@ -54,7 +54,7 @@ export default function EditJob() {
 		);
 
 	return (
-		<div>
+		<div className="max-w-2xl mx-auto">
 			<h1 className="font-display text-3xl mb-1">{t.editPosting}</h1>
 			<p className="text-ink-muted text-sm mb-8">
 				{t.updateListingDescription}
