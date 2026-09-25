@@ -188,7 +188,6 @@ export default function Navbar() {
 					aria-hidden={!isMenuOpen}
 				>
 					<div className="border-t border-line px-5 py-4 space-y-3 text-sm">
-						{themeToggle()}
 						{languageSelector('block')}
 						<NavLink
 							to="/"
