@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__)) // @intelephense-ignor
         health: '/up',
     )
     ->withMiddleware(function ($middleware): void {
+            // Trust Cloudflare/Render's edge proxies so signed URLs and HTTPS detection use the real scheme/host.
+            $middleware->trustProxies(at: '*');
+
             $middleware->alias([
                 'role' => 'App\\Http\\Middleware\\EnsureUserRole',
     ]);
