@@ -59,7 +59,7 @@ export default function JobForm({ initial, onSubmit, submitLabel }) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit} className="space-y-5 max-w-2xl">
+		<form onSubmit={handleSubmit} className="space-y-5 max-w-2xl mx-auto">
 			{error && <p className="text-rust text-sm">{error}</p>}
 
 			<div>
