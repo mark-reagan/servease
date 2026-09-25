@@ -24,7 +24,26 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
+# Retry instead of dying on a transient DNS/connection blip to the DB host at boot.
+wait_for_database() {
+    local host="${DB_HOST:-}"
+    local port="${DB_PORT:-3306}"
+    [ -z "$host" ] && return 0
+
+    local attempt=0
+    until timeout 2 bash -c "echo > /dev/tcp/${host}/${port}" 2>/dev/null; do
+        attempt=$((attempt + 1))
+        if [ "$attempt" -ge 30 ]; then
+            echo "Database ${host}:${port} still unreachable after ${attempt} attempts; continuing anyway."
+            break
+        fi
+        echo "Waiting for database ${host}:${port} to become reachable (attempt ${attempt})..."
+        sleep 2
+    done
+}
+
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
+    wait_for_database
     php artisan migrate --force
 fi
 
