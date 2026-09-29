@@ -80,6 +80,10 @@ const translations = {
 		accountSettingsDescription:
 			'Manage the email address and password used to sign in.',
 		emailAddress: 'Email address',
+		emailChangeWarning:
+			'You will need to verify this new email address. If you cannot access it and verify it, you may lose access to your account after signing out. Please make sure the address is correct and accessible.',
+		confirmEmailIsCorrect:
+			'I confirm this email address is correct and I can access it.',
 		currentPassword: 'Current password',
 		confirmNewPassword: 'Confirm new password',
 		saving: 'Saving...',
@@ -372,6 +376,10 @@ const translations = {
 		accountSettingsDescription:
 			'Pamahalaan ang email at password na ginagamit sa pag-sign in.',
 		emailAddress: 'Email address',
+		emailChangeWarning:
+			'Kailangan mong i-verify ang bagong email address na ito. Kung hindi mo ito maa-access at mave-verify, maaari kang mawalan ng access sa iyong account pagkatapos mag-log out. Tiyaking tama at maa-access ang address.',
+		confirmEmailIsCorrect:
+			'Kinukumpirma kong tama ang email address na ito at maa-access ko ito.',
 		currentPassword: 'Kasalukuyang password',
 		confirmNewPassword: 'Kumpirmahin ang bagong password',
 		saving: 'Sine-save...',

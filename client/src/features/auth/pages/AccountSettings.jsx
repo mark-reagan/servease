@@ -10,6 +10,7 @@ export default function AccountSettings() {
 	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const [email, setEmail] = useState(user?.email || '');
+	const [confirmEmailChange, setConfirmEmailChange] = useState(false);
 	const [currentPassword, setCurrentPassword] = useState('');
 	const [password, setPassword] = useState('');
 	const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -26,6 +27,8 @@ export default function AccountSettings() {
 	const [showPasswordConfirmation, setShowPasswordConfirmation] =
 		useState(false);
 	const [showDeletePassword, setShowDeletePassword] = useState(false);
+	const emailChanged =
+		email.trim().toLowerCase() !== user?.email?.toLowerCase();
 
 	async function handleSubmit(event) {
 		event.preventDefault();
@@ -94,9 +97,30 @@ export default function AccountSettings() {
 						autoComplete="email"
 						className="field-input"
 						value={email}
-						onChange={(event) => setEmail(event.target.value)}
+						onChange={(event) => {
+							setEmail(event.target.value);
+							setConfirmEmailChange(false);
+						}}
 						required
 					/>
+					{emailChanged && (
+						<div className="mt-3 space-y-3" role="alert">
+							<p className="border border-rust bg-rust/5 p-3 text-sm text-rust-dark">
+								{t.emailChangeWarning}
+							</p>
+							<label className="flex items-start gap-2 text-sm text-ink-muted">
+								<input
+									type="checkbox"
+									checked={confirmEmailChange}
+									onChange={(event) =>
+										setConfirmEmailChange(event.target.checked)
+									}
+									required
+								/>
+								<span>{t.confirmEmailIsCorrect}</span>
+							</label>
+						</div>
+					)}
 				</div>
 
 				<div className="border-t border-line pt-5 space-y-5">
@@ -200,7 +224,11 @@ export default function AccountSettings() {
 					</div>
 				</div>
 
-				<button type="submit" className="btn-primary" disabled={saving}>
+				<button
+					type="submit"
+					className="btn-primary"
+					disabled={saving || (emailChanged && !confirmEmailChange)}
+				>
 					{saving ? t.saving : t.saveAccountSettings}
 				</button>
 			</form>
