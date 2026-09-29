@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Heart } from 'lucide-react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api, ApiError } from '../../../shared/api/client';
 import { useAuth } from '../../auth/context/AuthContext';
@@ -217,8 +218,20 @@ export default function JobDetail() {
 				<div className="mt-8 panel p-6">
 					<div className="flex items-center justify-between mb-4">
 						<h2 className="font-display text-lg">{t.applyRole}</h2>
-						<button onClick={handleSave} className="btn-ghost text-sm">
-							{saved ? t.removeSavedJob : t.saveJob}
+						<button
+							onClick={handleSave}
+							className="btn-ghost text-sm"
+							aria-label={t.saveJob}
+							aria-pressed={saved}
+							title={t.saveJob}
+						>
+							<Heart
+								size={18}
+								aria-hidden="true"
+								className="text-ink-muted"
+								fill={saved ? 'currentColor' : 'none'}
+							/>
+							<span className="hidden sm:inline">{t.saveJob}</span>
 						</button>
 					</div>
 
