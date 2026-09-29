@@ -160,7 +160,7 @@ export default function Register() {
 					<div className="relative">
 						<input
 							id="password"
-							type={showPassword ? 'password' : 'text'}
+							type={showPassword ? 'text' : 'password'}
 							required
 							className="field-input pr-10"
 							value={form.password}
@@ -170,8 +170,8 @@ export default function Register() {
 							type="button"
 							className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
 							onClick={() => setShowPassword((visible) => !visible)}
-							aria-label={showPassword ? 'Show password' : 'Hide password'}
-							title={showPassword ? 'Show password' : 'Hide password'}
+							aria-label={showPassword ? 'Hide password' : 'Show password'}
+							title={showPassword ? 'Hide password' : 'Show password'}
 						>
 							{showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
 						</button>
@@ -188,7 +188,7 @@ export default function Register() {
 					<div className="relative">
 						<input
 							id="password_confirmation"
-							type={showPasswordConfirmation ? 'password' : 'text'}
+							type={showPasswordConfirmation ? 'text' : 'password'}
 							required
 							className="field-input pr-10"
 							value={form.password_confirmation}
@@ -200,13 +200,13 @@ export default function Register() {
 							onClick={() => setShowPasswordConfirmation((visible) => !visible)}
 							aria-label={
 								showPasswordConfirmation
-									? 'Show password confirmation'
-									: 'Hide password confirmation'
+									? 'Hide password confirmation'
+									: 'Show password confirmation'
 							}
 							title={
 								showPasswordConfirmation
-									? 'Show password confirmation'
-									: 'Hide password confirmation'
+									? 'Hide password confirmation'
+									: 'Show password confirmation'
 							}
 						>
 							{showPasswordConfirmation ? (

@@ -131,7 +131,7 @@ export default function AccountSettings() {
 						<div className="relative">
 							<input
 								id="current_password"
-								type={showCurrentPassword ? 'password' : 'text'}
+								type={showCurrentPassword ? 'text' : 'password'}
 								autoComplete="current-password"
 								className="field-input pr-10"
 								value={currentPassword}
@@ -143,13 +143,13 @@ export default function AccountSettings() {
 								onClick={() => setShowCurrentPassword((visible) => !visible)}
 								aria-label={
 									showCurrentPassword
-										? 'Show current password'
-										: 'Hide current password'
+										? 'Hide current password'
+										: 'Show current password'
 								}
 								title={
 									showCurrentPassword
-										? 'Show current password'
-										: 'Hide current password'
+										? 'Hide current password'
+										: 'Show current password'
 								}
 							>
 								{showCurrentPassword ? <Eye size={18} /> : <EyeOff size={18} />}
@@ -164,7 +164,7 @@ export default function AccountSettings() {
 							<div className="relative">
 								<input
 									id="password"
-									type={showPassword ? 'password' : 'text'}
+									type={showPassword ? 'text' : 'password'}
 									autoComplete="new-password"
 									className="field-input pr-10"
 									value={password}
@@ -174,8 +174,8 @@ export default function AccountSettings() {
 									type="button"
 									className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
 									onClick={() => setShowPassword((visible) => !visible)}
-									aria-label={showPassword ? 'Show password' : 'Hide password'}
-									title={showPassword ? 'Show password' : 'Hide password'}
+									aria-label={showPassword ? 'Hide password' : 'Show password'}
+									title={showPassword ? 'Hide password' : 'Show password'}
 								>
 									{showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
 								</button>
@@ -188,7 +188,7 @@ export default function AccountSettings() {
 							<div className="relative">
 								<input
 									id="password_confirmation"
-									type={showPasswordConfirmation ? 'password' : 'text'}
+									type={showPasswordConfirmation ? 'text' : 'password'}
 									autoComplete="new-password"
 									className="field-input pr-10"
 									value={passwordConfirmation}
@@ -204,13 +204,13 @@ export default function AccountSettings() {
 									}
 									aria-label={
 										showPasswordConfirmation
-											? 'Show password confirmation'
-											: 'Hide password confirmation'
+											? 'Hide password confirmation'
+											: 'Show password confirmation'
 									}
 									title={
 										showPasswordConfirmation
-											? 'Show password confirmation'
-											: 'Hide password confirmation'
+											? 'Hide password confirmation'
+											: 'Show password confirmation'
 									}
 								>
 									{showPasswordConfirmation ? (
@@ -283,7 +283,7 @@ export default function AccountSettings() {
 							<div className="relative">
 								<input
 									id="delete_password"
-									type={showDeletePassword ? 'password' : 'text'}
+									type={showDeletePassword ? 'text' : 'password'}
 									className="field-input pr-10"
 									value={deletePassword}
 									onChange={(event) => setDeletePassword(event.target.value)}
@@ -296,19 +296,19 @@ export default function AccountSettings() {
 									onClick={() => setShowDeletePassword((visible) => !visible)}
 									aria-label={
 										showDeletePassword
-											? 'Show delete password'
-											: 'Hide delete password'
+											? 'Hide delete password'
+											: 'Show delete password'
 									}
 									title={
 										showDeletePassword
-											? 'Show delete password'
-											: 'Hide delete password'
+											? 'Hide delete password'
+											: 'Show delete password'
 									}
 								>
 									{showDeletePassword ? (
-										<EyeOff size={18} />
-									) : (
 										<Eye size={18} />
+									) : (
+										<EyeOff size={18} />
 									)}
 								</button>
 							</div>
