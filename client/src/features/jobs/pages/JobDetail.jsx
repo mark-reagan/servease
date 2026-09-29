@@ -21,6 +21,7 @@ export default function JobDetail() {
 	const [loading, setLoading] = useState(true);
 	const [coverLetter, setCoverLetter] = useState('');
 	const [resumeFile, setResumeFile] = useState(null);
+	const [resumeChoice, setResumeChoice] = useState('none');
 	const [applying, setApplying] = useState(false);
 	const [applyMessage, setApplyMessage] = useState('');
 	const [applyError, setApplyError] = useState('');
@@ -49,6 +50,10 @@ export default function JobDetail() {
 		};
 	}, [id]);
 
+	useEffect(() => {
+		setResumeChoice(user?.candidate_profile?.has_resume ? 'profile' : 'none');
+	}, [user]);
+
 	async function handleApply(e) {
 		e.preventDefault();
 		setApplying(true);
@@ -56,12 +61,15 @@ export default function JobDetail() {
 		setApplyMessage('');
 		const data = new FormData();
 		data.append('cover_letter', coverLetter);
-		if (resumeFile) data.append('resume', resumeFile);
+		data.append('resume_choice', resumeChoice);
+		if (resumeChoice === 'upload' && resumeFile)
+			data.append('resume', resumeFile);
 		try {
 			await api.post(`/jobs/${id}/apply`, data);
 			setApplyMessage(t.applicationSent);
 			setCoverLetter('');
 			setResumeFile(null);
+			setResumeChoice(user?.candidate_profile?.has_resume ? 'profile' : 'none');
 		} catch (err) {
 			if (err instanceof ApiError) setApplyError(err.message);
 			else setApplyError(t.couldNotSubmitApplication);
@@ -235,24 +243,55 @@ export default function JobDetail() {
 								/>
 							</div>
 							<div>
-								<label className="field-label" htmlFor="resume">
-									{t.resumeOptional}
-								</label>
-								<input
-									id="resume"
-									type="file"
-									accept=".pdf,.doc,.docx"
-									className="field-input"
-									onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-								/>
-								{resumeFile ? (
-									<p className="text-xs text-teal mt-1">{resumeFile.name}</p>
-								) : (
-									user?.candidate_profile?.resume_path && (
-										<p className="text-xs text-ink-faint mt-1">
-											{t.profileResumeUsed}
-										</p>
-									)
+								<p className="field-label">{t.applicationResumeChoice}</p>
+								<div className="space-y-2 text-sm text-ink-muted">
+									{user?.candidate_profile?.has_resume && (
+										<label className="flex items-center gap-2">
+											<input
+												type="radio"
+												name="resume_choice"
+												value="profile"
+												checked={resumeChoice === 'profile'}
+												onChange={() => setResumeChoice('profile')}
+											/>
+											{t.useProfileResume}
+										</label>
+									)}
+									<label className="flex items-center gap-2">
+										<input
+											type="radio"
+											name="resume_choice"
+											value="upload"
+											checked={resumeChoice === 'upload'}
+											onChange={() => setResumeChoice('upload')}
+										/>
+										{t.uploadDifferentResume}
+									</label>
+									<label className="flex items-center gap-2">
+										<input
+											type="radio"
+											name="resume_choice"
+											value="none"
+											checked={resumeChoice === 'none'}
+											onChange={() => setResumeChoice('none')}
+										/>
+										{t.applyWithoutResume}
+									</label>
+								</div>
+								{resumeChoice === 'upload' && (
+									<input
+										id="resume"
+										type="file"
+										accept=".pdf,.doc,.docx"
+										className="field-input mt-2"
+										onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+										required
+									/>
+								)}
+								{resumeChoice === 'profile' && (
+									<p className="text-xs text-ink-faint mt-1">
+										{t.profileResumeUsed}
+									</p>
 								)}
 							</div>
 							<button type="submit" className="btn-primary" disabled={applying}>

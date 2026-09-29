@@ -126,6 +126,10 @@ const translations = {
 		coverLetterPlaceholder: 'Why this role, and why you.',
 		profileResumeUsed:
 			"The resume on your profile will be used if you don't attach one.",
+		applicationResumeChoice: 'Resume for this application',
+		useProfileResume: 'Use the resume saved on my profile',
+		uploadDifferentResume: 'Upload a different resume',
+		applyWithoutResume: 'Apply without a resume',
 		removeSavedJob: 'Remove saved job',
 		saveJob: 'Save job',
 		submitApplication: 'Submit application',
@@ -167,9 +171,16 @@ const translations = {
 		portfolioUrl: 'Portfolio URL',
 		resume: 'Resume (PDF or Word)',
 		resumeOnFile: 'A resume is already on file.',
+		downloadingResume: 'Downloading...',
 		saveProfile: 'Save profile',
 		savingProfile: 'Saving profile',
 		profileUpdated: 'Profile updated.',
+		candidateProfileForbidden:
+			'Only candidate accounts can save a candidate profile. Please log in with a candidate account.',
+		verifyEmailToSaveProfile:
+			'Please verify your email address before saving your profile. After verifying, log in again and try once more.',
+		profileSaveUnauthorized:
+			'Your account is not authorized to save this profile. Please log out and log back in, then try again.',
 		applicationDetails: 'Application details',
 		submitted: 'Submitted',
 		coverLetter: 'Cover letter',
@@ -407,6 +418,10 @@ const translations = {
 		coverLetterPlaceholder: 'Bakit ang trabahong ito, at bakit ikaw?',
 		profileResumeUsed:
 			'Gagamitin ang resume sa iyong profile kung hindi ka mag-attach ng bago.',
+		applicationResumeChoice: 'Resume para sa aplikasyon na ito',
+		useProfileResume: 'Gamitin ang resume na naka-save sa aking profile',
+		uploadDifferentResume: 'Mag-upload ng ibang resume',
+		applyWithoutResume: 'Mag-apply nang walang resume',
 		removeSavedJob: 'Alisin sa nai-save',
 		saveJob: 'I-save ang trabaho',
 		submitApplication: 'Ipadala ang aplikasyon',
@@ -448,9 +463,16 @@ const translations = {
 		portfolioUrl: 'Portfolio URL',
 		resume: 'Resume (PDF o Word)',
 		resumeOnFile: 'May naka-file nang resume.',
+		downloadingResume: 'Dina-download...',
 		saveProfile: 'I-save ang profile',
 		savingProfile: 'Sine-save ang profile',
 		profileUpdated: 'Na-update ang profile.',
+		candidateProfileForbidden:
+			'Ang mga candidate account lamang ang makakapag-save ng candidate profile. Mag-log in gamit ang candidate account.',
+		verifyEmailToSaveProfile:
+			'I-verify muna ang iyong email bago i-save ang profile. Pagkatapos mag-verify, mag-log in muli at subukan ulit.',
+		profileSaveUnauthorized:
+			'Hindi awtorisado ang iyong account na i-save ang profile na ito. Mag-log out at mag-log in muli, pagkatapos ay subukan ulit.',
 		applicationDetails: 'Detalye ng aplikasyon',
 		submitted: 'Naipadala',
 		coverLetter: 'Cover letter',

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Download } from 'lucide-react';
 import { api, ApiError } from '../../../shared/api/client';
 import { useAuth } from '../../auth/context/AuthContext';
 import Spinner from '../../../shared/components/Spinner';
@@ -11,6 +12,7 @@ export default function ProfileCandidate() {
 	const [form, setForm] = useState(null);
 	const [resumeFile, setResumeFile] = useState(null);
 	const [saving, setSaving] = useState(false);
+	const [downloadingResume, setDownloadingResume] = useState(false);
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState('');
 
@@ -31,6 +33,29 @@ export default function ProfileCandidate() {
 
 	function update(key, value) {
 		setForm((f) => ({ ...f, [key]: value }));
+	}
+
+	async function handleDownloadResume() {
+		setDownloadingResume(true);
+		try {
+			const { blob, filename } = await api.get(
+				'/profile/candidate/resume',
+				null,
+				{ responseType: 'blob' },
+			);
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = filename || 'profile-resume';
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+			window.URL.revokeObjectURL(url);
+		} catch {
+			setError(t.couldNotDownloadResume);
+		} finally {
+			setDownloadingResume(false);
+		}
 	}
 
 	async function handleSubmit(e) {
@@ -58,9 +83,20 @@ export default function ProfileCandidate() {
 		try {
 			await api.put('/profile/candidate', data);
 			await refresh();
+			setResumeFile(null);
 			setMessage(t.profileUpdated);
 		} catch (err) {
-			setError(err instanceof ApiError ? err.message : t.couldNotSaveProfile);
+			if (err instanceof ApiError && err.status === 403) {
+				if (user?.role !== 'candidate') {
+					setError(t.candidateProfileForbidden);
+				} else if (!user.email_verified_at) {
+					setError(t.verifyEmailToSaveProfile);
+				} else {
+					setError(t.profileSaveUnauthorized);
+				}
+			} else {
+				setError(err instanceof ApiError ? err.message : t.couldNotSaveProfile);
+			}
 		} finally {
 			setSaving(false);
 		}
@@ -193,8 +229,19 @@ export default function ProfileCandidate() {
 						className="field-input"
 						onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
 					/>
-					{user?.candidate_profile?.resume_path && !resumeFile && (
-						<p className="text-xs text-ink-faint mt-1">{t.resumeOnFile}</p>
+					{user?.candidate_profile?.has_resume && !resumeFile && (
+						<div className="mt-2 flex flex-wrap items-center gap-3">
+							<p className="text-xs text-ink-faint">{t.resumeOnFile}</p>
+							<button
+								type="button"
+								onClick={handleDownloadResume}
+								disabled={downloadingResume}
+								className="btn-ghost px-2 py-1 text-xs"
+							>
+								<Download size={14} aria-hidden="true" />
+								{downloadingResume ? t.downloadingResume : t.downloadResume}
+							</button>
+						</div>
 					)}
 				</div>
 

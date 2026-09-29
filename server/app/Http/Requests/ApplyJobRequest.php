@@ -15,7 +15,8 @@ class ApplyJobRequest extends FormRequest
     {
         return [
             'cover_letter' => ['nullable', 'string', 'max:5000'],
-            'resume' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'], // 5MB, uses candidate's stored resume if omitted
+            'resume_choice' => ['sometimes', 'in:profile,upload,none'],
+            'resume' => ['nullable', 'required_if:resume_choice,upload', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
         ];
     }
 }

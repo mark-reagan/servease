@@ -56,6 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
     */
     Route::middleware(['role:candidate', 'verified'])->group(function () {
         Route::put('/profile/candidate', [ProfileController::class, 'updateCandidateProfile']);
+        Route::get('/profile/candidate/resume', [ProfileController::class, 'downloadCandidateResume']);
 
         Route::post('/jobs/{job}/apply', [ApplicationController::class, 'apply']);
         Route::get('/applications', [ApplicationController::class, 'myApplications']);

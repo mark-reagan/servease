@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCompanyProfileRequest;
 use App\Http\Resources\CandidateProfileResource;
 use App\Http\Resources\CompanyProfileResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProfileController extends Controller
@@ -31,6 +32,20 @@ class ProfileController extends Controller
         $profile->update($data);
 
         return new CandidateProfileResource($profile->fresh());
+    }
+
+    /**
+     * Candidate downloads the resume stored on their own profile.
+     */
+    public function downloadCandidateResume(Request $request)
+    {
+        $profile = $request->user()->candidateProfile;
+
+        if (! $profile?->resume_path || ! Storage::disk('private')->exists($profile->resume_path)) {
+            return response()->json(['message' => 'No resume is attached to this profile.'], 404);
+        }
+
+        return Storage::disk('private')->download($profile->resume_path);
     }
 
     /**

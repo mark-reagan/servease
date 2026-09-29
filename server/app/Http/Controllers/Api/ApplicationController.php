@@ -36,9 +36,12 @@ class ApplicationController extends Controller
             return response()->json(['message' => 'You have already applied to this job.'], 409);
         }
 
-        $resumePath = $user->candidateProfile?->resume_path;
+        $resumeChoice = $request->validated('resume_choice');
+        $resumePath = $resumeChoice === 'none'
+            ? null
+            : ($user->candidateProfile?->resume_path);
 
-        if ($request->hasFile('resume')) {
+        if (($resumeChoice === 'upload' || ! $resumeChoice) && $request->hasFile('resume')) {
             $resumePath = $request->file('resume')->store('resumes/' . $user->id, 'private');
         }
 
