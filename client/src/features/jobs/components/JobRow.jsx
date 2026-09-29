@@ -7,7 +7,7 @@ import {
 } from '../../../shared/lib/format';
 import { useLanguage } from '../../../shared/context/LanguageContext';
 
-export default function JobRow({ job }) {
+export default function JobRow({ job, index = 0 }) {
 	const { t } = useLanguage();
 	const salary = formatSalary(job);
 
@@ -16,6 +16,10 @@ export default function JobRow({ job }) {
 			to={`/jobs/${job.id}`}
 			className="group flex gap-4 border-b border-line py-5 hover:bg-panel/60 transition-colors -mx-2 px-2"
 		>
+			<div
+				className={`w-1 shrink-0 ${index % 2 === 0 ? 'bg-amber' : 'bg-transparent'}`}
+				aria-hidden="true"
+			/>
 			{job.company?.logo_url && (
 				<img
 					src={job.company.logo_url}

@@ -139,8 +139,8 @@ export default function Home() {
 
 			{!loading && !error && jobs.length > 0 && (
 				<div>
-					{jobs.map((job) => (
-						<JobRow key={job.id} job={job} />
+					{jobs.map((job, index) => (
+						<JobRow key={job.id} job={job} index={index} />
 					))}
 					<Pagination meta={meta} onPageChange={setPage} />
 				</div>

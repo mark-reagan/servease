@@ -54,7 +54,10 @@ export default function SavedJobs() {
 				</p>
 			)}
 
-			{!loading && jobs.map((job) => <JobRow key={job.id} job={job} />)}
+			{!loading &&
+				jobs.map((job, index) => (
+					<JobRow key={job.id} job={job} index={index} />
+				))}
 
 			<Pagination meta={meta} onPageChange={setPage} />
 		</div>
