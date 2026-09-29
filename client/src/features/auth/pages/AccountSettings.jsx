@@ -107,7 +107,7 @@ export default function AccountSettings() {
 						<div className="relative">
 							<input
 								id="current_password"
-								type={showCurrentPassword ? 'text' : 'password'}
+								type={showCurrentPassword ? 'password' : 'text'}
 								autoComplete="current-password"
 								className="field-input pr-10"
 								value={currentPassword}
@@ -119,16 +119,16 @@ export default function AccountSettings() {
 								onClick={() => setShowCurrentPassword((visible) => !visible)}
 								aria-label={
 									showCurrentPassword
-										? 'Hide current password'
-										: 'Show current password'
+										? 'Show current password'
+										: 'Hide current password'
 								}
 								title={
 									showCurrentPassword
-										? 'Hide current password'
-										: 'Show current password'
+										? 'Show current password'
+										: 'Hide current password'
 								}
 							>
-								{showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+								{showCurrentPassword ? <Eye size={18} /> : <EyeOff size={18} />}
 							</button>
 						</div>
 					</div>
@@ -140,7 +140,7 @@ export default function AccountSettings() {
 							<div className="relative">
 								<input
 									id="password"
-									type={showPassword ? 'text' : 'password'}
+									type={showPassword ? 'password' : 'text'}
 									autoComplete="new-password"
 									className="field-input pr-10"
 									value={password}
@@ -150,10 +150,10 @@ export default function AccountSettings() {
 									type="button"
 									className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
 									onClick={() => setShowPassword((visible) => !visible)}
-									aria-label={showPassword ? 'Hide password' : 'Show password'}
-									title={showPassword ? 'Hide password' : 'Show password'}
+									aria-label={showPassword ? 'Show password' : 'Hide password'}
+									title={showPassword ? 'Show password' : 'Hide password'}
 								>
-									{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+									{showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
 								</button>
 							</div>
 						</div>
@@ -164,7 +164,7 @@ export default function AccountSettings() {
 							<div className="relative">
 								<input
 									id="password_confirmation"
-									type={showPasswordConfirmation ? 'text' : 'password'}
+									type={showPasswordConfirmation ? 'password' : 'text'}
 									autoComplete="new-password"
 									className="field-input pr-10"
 									value={passwordConfirmation}
@@ -180,19 +180,19 @@ export default function AccountSettings() {
 									}
 									aria-label={
 										showPasswordConfirmation
-											? 'Hide password confirmation'
-											: 'Show password confirmation'
+											? 'Show password confirmation'
+											: 'Hide password confirmation'
 									}
 									title={
 										showPasswordConfirmation
-											? 'Hide password confirmation'
-											: 'Show password confirmation'
+											? 'Show password confirmation'
+											: 'Hide password confirmation'
 									}
 								>
 									{showPasswordConfirmation ? (
-										<EyeOff size={18} />
-									) : (
 										<Eye size={18} />
+									) : (
+										<EyeOff size={18} />
 									)}
 								</button>
 							</div>
@@ -255,7 +255,7 @@ export default function AccountSettings() {
 							<div className="relative">
 								<input
 									id="delete_password"
-									type={showDeletePassword ? 'text' : 'password'}
+									type={showDeletePassword ? 'password' : 'text'}
 									className="field-input pr-10"
 									value={deletePassword}
 									onChange={(event) => setDeletePassword(event.target.value)}
@@ -268,13 +268,13 @@ export default function AccountSettings() {
 									onClick={() => setShowDeletePassword((visible) => !visible)}
 									aria-label={
 										showDeletePassword
-											? 'Hide delete password'
-											: 'Show delete password'
+											? 'Show delete password'
+											: 'Hide delete password'
 									}
 									title={
 										showDeletePassword
-											? 'Hide delete password'
-											: 'Show delete password'
+											? 'Show delete password'
+											: 'Hide delete password'
 									}
 								>
 									{showDeletePassword ? (

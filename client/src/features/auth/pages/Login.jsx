@@ -90,7 +90,7 @@ export default function Login() {
 					<div className="relative">
 						<input
 							id="password"
-							type={showPassword ? 'text' : 'password'}
+							type={showPassword ? 'password' : 'text'}
 							required
 							className="field-input pr-10"
 							value={password}
@@ -100,10 +100,10 @@ export default function Login() {
 							type="button"
 							className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted hover:text-ink"
 							onClick={() => setShowPassword((visible) => !visible)}
-							aria-label={showPassword ? 'Hide password' : 'Show password'}
-							title={showPassword ? 'Hide password' : 'Show password'}
+							aria-label={showPassword ? 'Show password' : 'Hide password'}
+							title={showPassword ? 'Show password' : 'Hide password'}
 						>
-							{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+							{showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
 						</button>
 					</div>
 				</div>
