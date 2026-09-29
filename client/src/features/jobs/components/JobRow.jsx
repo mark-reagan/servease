@@ -20,6 +20,13 @@ export default function JobRow({ job }) {
 				className={`w-1 shrink-0 ${job.work_mode === 'remote' ? 'bg-teal' : 'bg-amber'}`}
 				aria-hidden="true"
 			/>
+			{job.company?.logo_url && (
+				<img
+					src={job.company.logo_url}
+					alt=""
+					className="h-12 w-12 shrink-0 rounded-md border border-line bg-white object-contain p-1"
+				/>
+			)}
 
 			<div className="flex-1 min-w-0">
 				<div className="flex items-baseline justify-between gap-4">

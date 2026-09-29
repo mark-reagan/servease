@@ -29,6 +29,9 @@ class JobResource extends JsonResource
                 'id' => $this->companyProfile?->id,
                 'name' => $this->companyProfile?->company_name,
                 'logo_path' => $this->companyProfile?->logo_path,
+                'logo_url' => $this->companyProfile?->logo_path
+                    ? asset('storage/' . $this->companyProfile->logo_path)
+                    : null,
                 'location' => $this->companyProfile?->location,
             ],
             'applications_count' => $this->whenCounted('applications'),

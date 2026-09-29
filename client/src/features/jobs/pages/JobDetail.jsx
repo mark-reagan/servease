@@ -133,10 +133,21 @@ export default function JobDetail() {
 				</div>
 
 				<div className="p-8">
-					<p className="text-sm text-ink-muted">
-						{job.company?.name || 'A company'}
-					</p>
-					<h1 className="font-display text-3xl mt-1">{job.title}</h1>
+					<div className="flex items-center gap-4">
+						{job.company?.logo_url && (
+							<img
+								src={job.company.logo_url}
+								alt=""
+								className="h-14 w-14 shrink-0 rounded-md border border-line bg-white object-contain p-1"
+							/>
+						)}
+						<div className="min-w-0">
+							<p className="text-sm text-ink-muted">
+								{job.company?.name || 'A company'}
+							</p>
+							<h1 className="font-display text-3xl mt-1">{job.title}</h1>
+						</div>
+					</div>
 
 					<div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-ink-muted">
 						{job.location && <span>{job.location}</span>}

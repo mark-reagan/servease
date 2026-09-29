@@ -10,6 +10,7 @@ export default function ProfileCompany() {
 	const { t } = useLanguage();
 	const [form, setForm] = useState(null);
 	const [logoFile, setLogoFile] = useState(null);
+	const [logoPreview, setLogoPreview] = useState('');
 	const [saving, setSaving] = useState(false);
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState('');
@@ -24,8 +25,16 @@ export default function ProfileCompany() {
 				company_size: user.company_profile.company_size || '',
 				location: user.company_profile.location || '',
 			});
+			setLogoPreview(user.company_profile.logo_url || '');
 		}
 	}, [user]);
+
+	useEffect(() => {
+		if (!logoFile) return;
+		const previewUrl = URL.createObjectURL(logoFile);
+		setLogoPreview(previewUrl);
+		return () => URL.revokeObjectURL(previewUrl);
+	}, [logoFile]);
 
 	function update(key, value) {
 		setForm((f) => ({ ...f, [key]: value }));
@@ -46,6 +55,7 @@ export default function ProfileCompany() {
 		try {
 			await api.put('/profile/company', data);
 			await refresh();
+			setLogoFile(null);
 			setMessage(t.companyProfileUpdated);
 		} catch (err) {
 			setError(
@@ -163,6 +173,13 @@ export default function ProfileCompany() {
 					<label className="field-label" htmlFor="logo">
 						{t.logo}
 					</label>
+					{logoPreview && (
+						<img
+							src={logoPreview}
+							alt={`${form.company_name} ${t.logo}`}
+							className="mb-3 h-20 w-20 rounded-lg border border-line bg-white object-contain p-2"
+						/>
+					)}
 					<input
 						id="logo"
 						type="file"

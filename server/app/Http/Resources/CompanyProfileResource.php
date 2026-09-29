@@ -16,6 +16,7 @@ class CompanyProfileResource extends JsonResource
             'description' => $this->description,
             'website' => $this->website,
             'logo_path' => $this->logo_path,
+            'logo_url' => $this->logo_path ? asset('storage/' . $this->logo_path) : null,
             'industry' => $this->industry,
             'company_size' => $this->company_size,
             'location' => $this->location,
