@@ -21,6 +21,7 @@ class UpdateCompanyProfileRequest extends FormRequest
             'company_size' => ['nullable', 'string', 'max:50'],
             'location' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'max:2048'],
+            'remove_logo' => ['nullable', 'boolean'],
         ];
     }
 }

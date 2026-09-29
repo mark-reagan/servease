@@ -24,6 +24,7 @@ class UpdateCandidateProfileRequest extends FormRequest
             'years_experience' => ['nullable', 'integer', 'min:0', 'max:60'],
             'open_to_work' => ['nullable', 'boolean'],
             'resume' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+            'remove_resume' => ['nullable', 'boolean'],
         ];
     }
 }

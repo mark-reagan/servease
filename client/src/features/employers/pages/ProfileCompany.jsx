@@ -11,6 +11,7 @@ export default function ProfileCompany() {
 	const [form, setForm] = useState(null);
 	const [logoFile, setLogoFile] = useState(null);
 	const [logoPreview, setLogoPreview] = useState('');
+	const [removeLogo, setRemoveLogo] = useState(false);
 	const [saving, setSaving] = useState(false);
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState('');
@@ -33,6 +34,7 @@ export default function ProfileCompany() {
 		if (!logoFile) return;
 		const previewUrl = URL.createObjectURL(logoFile);
 		setLogoPreview(previewUrl);
+		setRemoveLogo(false);
 		return () => URL.revokeObjectURL(previewUrl);
 	}, [logoFile]);
 
@@ -51,11 +53,13 @@ export default function ProfileCompany() {
 			data.append(key, value ?? ''),
 		);
 		if (logoFile) data.append('logo', logoFile);
+		if (removeLogo && !logoFile) data.append('remove_logo', '1');
 
 		try {
 			await api.put('/profile/company', data);
 			await refresh();
 			setLogoFile(null);
+			setRemoveLogo(false);
 			setMessage(t.companyProfileUpdated);
 		} catch (err) {
 			setError(
@@ -173,20 +177,39 @@ export default function ProfileCompany() {
 					<label className="field-label" htmlFor="logo">
 						{t.logo}
 					</label>
-					{logoPreview && (
-						<img
-							src={logoPreview}
-							alt={`${form.company_name} ${t.logo}`}
-							className="mb-3 h-20 w-20 rounded-lg border border-line bg-white object-contain p-2"
+					<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+						{logoPreview && !removeLogo && (
+							<div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg border border-line bg-white p-2">
+								<img
+									src={logoPreview}
+									alt={`${form.company_name} ${t.logo}`}
+									className="h-full w-full object-contain"
+								/>
+							</div>
+						)}
+						<input
+							id="logo"
+							type="file"
+							accept="image/*"
+							className="field-input min-w-0 flex-1"
+							onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
 						/>
+					</div>
+					{user?.company_profile?.logo_url && !logoFile && (
+						<div className="mt-2">
+							<label className="flex items-center gap-2 text-sm text-ink-muted">
+								<input
+									type="checkbox"
+									checked={removeLogo}
+									onChange={(e) => setRemoveLogo(e.target.checked)}
+								/>
+								{t.removeLogo}
+							</label>
+							<p className="ml-6 mt-1 text-xs text-ink-faint">
+								{t.removeLogoConfirmation}
+							</p>
+						</div>
 					)}
-					<input
-						id="logo"
-						type="file"
-						accept="image/*"
-						className="field-input"
-						onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
-					/>
 				</div>
 
 				<button type="submit" className="btn-primary" disabled={saving}>

@@ -133,12 +133,12 @@ export default function JobDetail() {
 				</div>
 
 				<div className="p-8">
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-5">
 						{job.company?.logo_url && (
 							<img
 								src={job.company.logo_url}
 								alt=""
-								className="h-14 w-14 shrink-0 rounded-md border border-line bg-white object-contain p-1"
+								className="h-16 w-16 shrink-0 rounded-xl border border-line bg-white object-contain p-2"
 							/>
 						)}
 						<div className="min-w-0">

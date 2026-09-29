@@ -11,6 +11,7 @@ export default function ProfileCandidate() {
 	const { t } = useLanguage();
 	const [form, setForm] = useState(null);
 	const [resumeFile, setResumeFile] = useState(null);
+	const [removeResume, setRemoveResume] = useState(false);
 	const [saving, setSaving] = useState(false);
 	const [downloadingResume, setDownloadingResume] = useState(false);
 	const [message, setMessage] = useState('');
@@ -79,11 +80,13 @@ export default function ProfileCandidate() {
 			data.append('years_experience', form.years_experience);
 		data.append('open_to_work', form.open_to_work ? '1' : '0');
 		if (resumeFile) data.append('resume', resumeFile);
+		if (removeResume && !resumeFile) data.append('remove_resume', '1');
 
 		try {
 			await api.put('/profile/candidate', data);
 			await refresh();
 			setResumeFile(null);
+			setRemoveResume(false);
 			setMessage(t.profileUpdated);
 		} catch (err) {
 			if (err instanceof ApiError && err.status === 403) {
@@ -227,20 +230,41 @@ export default function ProfileCandidate() {
 						type="file"
 						accept=".pdf,.doc,.docx"
 						className="field-input"
-						onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+						onChange={(e) => {
+							setResumeFile(e.target.files?.[0] || null);
+							setRemoveResume(false);
+						}}
 					/>
 					{user?.candidate_profile?.has_resume && !resumeFile && (
-						<div className="mt-2 flex flex-wrap items-center gap-3">
-							<p className="text-xs text-ink-faint">{t.resumeOnFile}</p>
-							<button
-								type="button"
-								onClick={handleDownloadResume}
-								disabled={downloadingResume}
-								className="btn-ghost px-2 py-1 text-xs"
-							>
-								<Download size={14} aria-hidden="true" />
-								{downloadingResume ? t.downloadingResume : t.downloadResume}
-							</button>
+						<div className="mt-2 space-y-2">
+							{!removeResume && (
+								<div className="flex flex-wrap items-center gap-3">
+									<p className="text-xs text-ink-faint">{t.resumeOnFile}</p>
+									<button
+										type="button"
+										onClick={handleDownloadResume}
+										disabled={downloadingResume}
+										className="btn-ghost px-2 py-1 text-xs"
+									>
+										<Download size={14} aria-hidden="true" />
+										{downloadingResume ? t.downloadingResume : t.downloadResume}
+									</button>
+								</div>
+							)}
+							<div>
+								<label className="flex items-start gap-2 text-sm text-ink-muted mt-5">
+									<input
+										type="checkbox"
+										className="mt-0.5 shrink-0"
+										checked={removeResume}
+										onChange={(e) => setRemoveResume(e.target.checked)}
+									/>
+									<span>{t.removeResume}</span>
+								</label>
+								<p className="ml-6 mt-1 text-xs text-ink-faint">
+									{t.removeResumeConfirmation}
+								</p>
+							</div>
 						</div>
 					)}
 				</div>

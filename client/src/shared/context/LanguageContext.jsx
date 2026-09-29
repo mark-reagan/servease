@@ -164,6 +164,9 @@ const translations = {
 		industry: 'Industry',
 		companySize: 'Company size',
 		logo: 'Logo',
+		removeLogo: 'Remove current logo',
+		removeLogoConfirmation:
+			'Remove the saved company logo when this profile is saved.',
 		saveCompanyProfile: 'Save company profile',
 		companyProfileUpdated: 'Company profile updated.',
 		candidateProfile: 'Your profile',
@@ -175,6 +178,9 @@ const translations = {
 		portfolioUrl: 'Portfolio URL',
 		resume: 'Resume (PDF or Word)',
 		resumeOnFile: 'A resume is already on file.',
+		removeResume: 'Remove current resume',
+		removeResumeConfirmation:
+			'Remove the saved resume when this profile is saved.',
 		downloadingResume: 'Downloading...',
 		saveProfile: 'Save profile',
 		savingProfile: 'Saving profile',
@@ -459,6 +465,9 @@ const translations = {
 		industry: 'Industriya',
 		companySize: 'Laki ng kumpanya',
 		logo: 'Logo',
+		removeLogo: 'Alisin ang kasalukuyang logo',
+		removeLogoConfirmation:
+			'Alisin ang naka-save na logo ng kumpanya kapag na-save ang profile na ito.',
 		saveCompanyProfile: 'I-save ang profile ng kumpanya',
 		companyProfileUpdated: 'Na-update ang profile ng kumpanya.',
 		candidateProfile: 'Iyong profile',
@@ -471,6 +480,9 @@ const translations = {
 		portfolioUrl: 'Portfolio URL',
 		resume: 'Resume (PDF o Word)',
 		resumeOnFile: 'May naka-file nang resume.',
+		removeResume: 'Alisin ang kasalukuyang resume',
+		removeResumeConfirmation:
+			'Alisin ang naka-save na resume kapag na-save ang profile na ito.',
 		downloadingResume: 'Dina-download...',
 		saveProfile: 'I-save ang profile',
 		savingProfile: 'Sine-save ang profile',

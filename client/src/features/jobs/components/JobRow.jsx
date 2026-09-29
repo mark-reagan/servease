@@ -16,15 +16,11 @@ export default function JobRow({ job }) {
 			to={`/jobs/${job.id}`}
 			className="group flex gap-4 border-b border-line py-5 hover:bg-panel/60 transition-colors -mx-2 px-2"
 		>
-			<div
-				className={`w-1 shrink-0 ${job.work_mode === 'remote' ? 'bg-teal' : 'bg-amber'}`}
-				aria-hidden="true"
-			/>
 			{job.company?.logo_url && (
 				<img
 					src={job.company.logo_url}
 					alt=""
-					className="h-12 w-12 shrink-0 rounded-md border border-line bg-white object-contain p-1"
+					className="mt-0.5 h-14 w-14 shrink-0 rounded-lg border border-line bg-white object-contain p-2"
 				/>
 			)}
 
