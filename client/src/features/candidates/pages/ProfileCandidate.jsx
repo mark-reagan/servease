@@ -245,14 +245,14 @@ export default function ProfileCandidate() {
 					)}
 				</div>
 
-				<label className="flex items-center gap-2 text-sm text-ink-muted">
+				{/* <label className="flex items-center gap-2 text-sm text-ink-muted">
 					<input
 						type="checkbox"
 						checked={form.open_to_work}
 						onChange={(e) => update('open_to_work', e.target.checked)}
 					/>
 					{t.openToNewRoles}
-				</label>
+				</label> */}
 
 				<button type="submit" className="btn-primary" disabled={saving}>
 					{saving ? t.savingProfile : t.saveProfile}
